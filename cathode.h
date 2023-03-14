@@ -22,6 +22,7 @@
 #include "include/cth_string.h"
 #include "include/cth_arena.h"
 #include "include/cth_log.h"
+#include "include/cth_os.h"
 
 #endif // CATHODE_H_
 

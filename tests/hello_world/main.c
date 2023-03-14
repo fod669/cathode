@@ -1,7 +1,7 @@
 
 #include "cathode.h"
 
-int cth_main(Arena* arena, int argc, str8* argv)
+int cth_main(Arena* arena, int argc, str8 argv[])
 {
 	log_info("Hello world!\n");
 	for (int i = 0; i < argc; ++i)

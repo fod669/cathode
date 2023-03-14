@@ -15,7 +15,7 @@ set config=debug
 set console=yes
 
 :: Set the source files to compile
-set src_files=main.c
+set src_files=main.c %cathode_dir%\src\cathode.c
 
 :: Executable name and output directory:
 :: ============================================================================
