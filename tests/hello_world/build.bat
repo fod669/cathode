@@ -31,9 +31,9 @@ set disabled_warnings=-Wno-unused-parameter -Wno-gnu-zero-variadic-macro-argumen
 
 :: Buld configuration settings:
 :: ============================================================================
-set options_debug=-g -O0 -DC_DEBUG=1
-set options_release=-g -flto -O2 -DC_RELEASE=1
-set options_dist=-flto -O2 -DC_DIST=1
+set options_debug=-g -O0 -DCTH_DEBUG=1
+set options_release=-g -flto -O2 -DCTH_RELEASE=1
+set options_dist=-flto -O2 -DCTH_DIST=1
 
 :: CRT settings:
 :: ============================================================================
@@ -43,8 +43,8 @@ set crt_flags=-nostdlib -lkernel32 -D_VC_NODEFAULTLIB %stack_options% --for-link
 
 :: Subsystem settings:
 :: ============================================================================
-set console_yes=--for-linker=-subsystem:console -DC_CONSOLE=1
-set console_no=--for-linker=-subsystem:windows -DC_CONSOLE=0
+set console_yes=--for-linker=-subsystem:console -DCTH_CONSOLE=1
+set console_no=--for-linker=-subsystem:windows -DCTH_CONSOLE=0
 
 :: Compile:
 :: ============================================================================
