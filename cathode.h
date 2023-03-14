@@ -15,6 +15,9 @@
 #endif
 
 // All other cathode lib includes go here.
+#include "include/cth.h"
+#include "include/cth_string.h"
+#include "include/cth_arena.h"
 
 #endif // CATHODE_H_
 
