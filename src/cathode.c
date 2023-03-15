@@ -3,7 +3,9 @@
 
 #include "src/cth_crt.c"
 
+#include "src/cth_log.c"
 #include "src/cth_string.c"
+#include "src/cth_arena.c"
 
 #if CTH_OS_WINDOWS
 	#include "src/cth_os_win32.c"
