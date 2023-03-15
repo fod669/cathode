@@ -15,5 +15,7 @@ void				os_critsec_delete(CritSec* cs);
 void				os_critsec_enter(CritSec* cs);
 void				os_critsec_leave(CritSec* cs);
 
+void				os_output_debug_string(const char* buf);
+
 #endif // CTH_OS_H_
 

@@ -3,6 +3,7 @@ typedef struct _CathodeContext
 {
 	bool			initialised;
 	CritSec			logCritSec;
+	char			sprintfBuffer[STB_SPRINTF_MIN];
 } CathodeContext;
 
 CathodeContext g_crt;
@@ -23,6 +24,10 @@ void crt_shutdown(void)
 
 // User entry point.
 int cth_main(Arena* arena, int argc, str8 argv[]);
+
+// Enable floats.
+extern int _fltused;
+int _fltused = 0;
 
 NORETURN void STDCALL crt_entry(void)
 {

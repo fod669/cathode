@@ -34,3 +34,8 @@ inline void os_critsec_leave(CritSec* cs)
 	LeaveCriticalSection(&cs->data);
 }
 
+inline void os_output_debug_string(const char* buf)
+{
+	OutputDebugStringA(buf);
+}
+
