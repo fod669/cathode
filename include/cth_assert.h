@@ -40,13 +40,12 @@ Proper ASSERT() usage:
 			}																												\
 		}																													\
 		while (0)
+
+	// An assert with no error message or anything. Use this in cases where the log might not even have been initialised yet.
+	#define ASSERT_RAW(_Exp)	do { if (!(_Exp)) { DEBUG_BREAK_OR_TERMINATE(EXIT_CODE_ASSERT); } } while (0)
 #else
-	#define ASSERT(_Exp)				\
-		do								\
-		{								\
-			(void)sizeof(_Exp);			\
-		}								\
-		while (0)
+	#define ASSERT(_Exp)		do { (void)sizeof(_Exp); } while (0)
+	#define ASSERT_RAW			ASSERT
 #endif
 
 // TODO: Write an error popup function.

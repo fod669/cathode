@@ -25,6 +25,9 @@
 #include "include/cth_os.h"
 
 #if CTH_OS_WINDOWS
+	#define WIN32_LEAN_AND_MEAN
+	#define NOMINMAX
+	#include <Windows.h>
 	#include "include/cth_os_win32.inl"
 #elif CTH_OS_APPLE
 	#error Not yet implemented!
