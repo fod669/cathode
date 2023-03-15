@@ -27,6 +27,16 @@ void log_printf_dbg(eLogErrorLevel errorLevel, const char* file, u32 line, const
 
 static char* printf_callback(const char* buf, void* user, int len)
 {
+	eConsoleTextColour textColours[LOG_LEVEL_COUNT] =
+	{
+		CTC_GREEN,
+		CTC_YELLOW,
+		CTC_RED,
+		CTC_RED_BACKGROUND
+	};
+	eLogErrorLevel errorLevel = (eLogErrorLevel)(u64)user;
+	ASSERT(errorLevel >= 0 && errorLevel < LOG_LEVEL_COUNT);
+	os_console_write(buf, len, textColours[errorLevel]);
 	os_output_debug_string(buf);
 	return g_crt.sprintfBuffer;
 }

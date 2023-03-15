@@ -5,6 +5,16 @@
 
 typedef struct _CritSec CritSec;
 
+typedef enum eConsoleTextColour
+{
+	CTC_GREEN,
+	CTC_YELLOW,
+	CTC_RED,
+	CTC_RED_BACKGROUND,
+
+	CTC_COUNT
+} eConsoleTextColour;
+
 str8				os_get_command_line_args_str8(void);
 NORETURN void		os_exit_process(int result);
 
@@ -16,6 +26,8 @@ void				os_critsec_enter(CritSec* cs);
 void				os_critsec_leave(CritSec* cs);
 
 void				os_output_debug_string(const char* buf);
+
+void				os_console_write(const char* buf, int length, eConsoleTextColour colour);
 
 #endif // CTH_OS_H_
 
