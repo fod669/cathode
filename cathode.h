@@ -25,5 +25,17 @@
 #include "include/cth_log.h"
 #include "include/cth_os.h"
 
+#if CTH_OS_WINDOWS
+	#include "include/cth_os_win32.inl"
+#elif CTH_OS_APPLE
+	#error Not yet implemented!
+#elif CTH_OS_ANDROID
+	#error Not yet implemented!
+#elif CTH_OS_LINUX
+	#error Not yet implemented!
+#else
+	#error Unknown operating system!
+#endif
+
 #endif // CATHODE_H_
 
