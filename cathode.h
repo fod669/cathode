@@ -19,6 +19,7 @@
 
 // All other cathode lib includes go here.
 #include "include/cth.h"
+#include "include/cth_assert.h"
 #include "include/cth_string.h"
 #include "include/cth_arena.h"
 #include "include/cth_log.h"
