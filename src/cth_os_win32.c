@@ -23,7 +23,14 @@ void os_console_write(const char* buf, int length, eConsoleTextColour colour)
 	HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
 	if (consoleHandle && consoleHandle != INVALID_HANDLE_VALUE)
 	{
-		if (SetConsoleTextAttribute(consoleHandle, colours[colour]) == false)
+		CONSOLE_SCREEN_BUFFER_INFO csbInfo;
+		if (GetConsoleScreenBufferInfo(consoleHandle, &csbInfo) == false)
+		{
+			// TODO: Write this function.
+			//log_last_error();
+		}
+
+		if (SetConsoleTextAttribute(consoleHandle, (colour == CTC_RED_BACKGROUND) ? colours[colour] : ((csbInfo.wAttributes & ~0xF) | colours[colour])) == false)
 		{
 			// TODO: Write this function.
 			//log_last_error();
@@ -40,7 +47,7 @@ void os_console_write(const char* buf, int length, eConsoleTextColour colour)
 			ASSERT((int)charsWritten == length);
 		}
 
-		if (SetConsoleTextAttribute(consoleHandle, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE) == false)
+		if (SetConsoleTextAttribute(consoleHandle, csbInfo.wAttributes) == false)
 		{
 			// TODO: Write this function.
 			//log_last_error();
