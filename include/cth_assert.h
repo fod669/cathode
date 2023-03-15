@@ -35,7 +35,7 @@ Proper ASSERT() usage:
 		{																													\
 			if (!(_Exp))																									\
 			{																												\
-				log_critical("Assert failed!\n[%u] %s:%d: \"%s\"\n", thread_get_ID(), __FILE__, __LINE__, #_Exp);			\
+				log_critical("Assert failed!\n[%u] %s:%d: \"%s\"\n", os_thread_get_ID(), __FILE__, __LINE__, #_Exp);		\
 				DEBUG_BREAK_OR_TERMINATE(EXIT_CODE_ASSERT);																	\
 			}																												\
 		}																													\
