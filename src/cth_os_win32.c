@@ -60,7 +60,26 @@ void os_console_write(const char* buf, int length, eConsoleTextColour colour)
 
 void os_log_last_error(void)
 {
-	// TODO: Implement me!
+	DWORD error = GetLastError();
+	if (error)
+	{
+		LPVOID msgBuf;
+		DWORD bufLen = FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER |
+									 FORMAT_MESSAGE_FROM_SYSTEM |
+									 FORMAT_MESSAGE_IGNORE_INSERTS,
+									 NULL,
+									 error,
+									 MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+									 (LPTSTR)&msgBuf,
+									 0,
+									 NULL);
+		if (bufLen)
+		{
+			char* msgString = (char*)msgBuf;
+			log_critical("GetLastError() returned: \"%s\"\n", msgString);
+			LocalFree(msgBuf);
+		}
+	}
 }
 
 void os_crt_init(void)
