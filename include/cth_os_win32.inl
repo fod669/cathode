@@ -4,10 +4,23 @@ typedef struct _CritSec
 	CRITICAL_SECTION data;
 } CritSec;
 
+inline u8* os_thread_get_TIB(void)
+{
+	#if CTH_ARCH_32_BIT
+		u8* tib = (u8*)__readfsdword(0x18);
+	#elif CTH_ARCH_64_BIT
+		u8* tib = (u8*)__readgsqword(0x30);
+	#else
+		#error Unsupported architecture!
+	#endif
+
+	return tib;
+}
+
 inline u32 os_thread_get_ID(void)
 {
-	// TODO: Implement me!
-	return 0;
+	u32 threadID = *(u32*)(os_thread_get_TIB() + 0x48);
+	return threadID;
 }
 
 inline void os_critsec_init(CritSec* cs)
