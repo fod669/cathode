@@ -19,3 +19,9 @@ str8* str8_parse_command_line(Arena* arena, str8 commandLine, int* out_argCount)
 	return NULL;
 }
 
+str8 str8_push(Arena* arena, str8 s)
+{
+	// TODO: Implement me!
+	return s;
+}
+

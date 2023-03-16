@@ -1,4 +1,14 @@
 
+void os_crt_init(void)
+{
+
+}
+
+void os_crt_shutdown(void)
+{
+
+}
+
 str8 os_get_command_line_args_str8(void)
 {
 	char* cmdLine = GetCommandLineA();
@@ -82,13 +92,39 @@ void os_log_last_error(void)
 	}
 }
 
-void os_crt_init(void)
+size_t os_mem_get_page_size(void)
 {
-
+	// TODO: Implement me!
+	return 0;
 }
 
-void os_crt_shutdown(void)
+size_t os_mem_get_base_granularity(void)
 {
+	// TODO: Implement me!
+	return 0;
+}
 
+void* os_mem_reserve(size_t byteCount, void* baseAddress)
+{
+	// TODO: Implement me!
+	return NULL;
+}
+
+void* os_mem_commit(void* address, size_t byteCount)
+{
+	// TODO: Implement me!
+	return NULL;
+}
+
+bool os_mem_decommit(void* address, size_t byteCount)
+{
+	// TODO: Implement me!
+	return false;
+}
+
+bool os_mem_release(void* address)
+{
+	// TODO: Implement me!
+	return false;
 }
 

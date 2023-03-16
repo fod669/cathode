@@ -32,5 +32,13 @@ void				os_console_write(const char* buf, int length, eConsoleTextColour colour)
 
 void				os_log_last_error(void);
 
+size_t				os_mem_get_page_size(void);
+size_t				os_mem_get_base_granularity(void);
+
+void*				os_mem_reserve(size_t byteCount, void* baseAddress);
+void*				os_mem_commit(void* address, size_t byteCount);
+bool				os_mem_decommit(void* address, size_t byteCount);
+bool				os_mem_release(void* address);
+
 #endif // CTH_OS_H_
 

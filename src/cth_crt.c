@@ -26,9 +26,6 @@ void crt_shutdown(void)
 // User entry point.
 int cth_main(Arena* arena, int argc, str8 argv[]);
 
-// Enable floats.
-int _fltused = 42;
-
 NORETURN void STDCALL crt_entry(void)
 {
 	crt_init();
@@ -44,5 +41,35 @@ NORETURN void STDCALL crt_entry(void)
 	crt_shutdown();
 
 	os_exit_process(result);
+}
+
+// CRT functionality
+// ================================================================================================
+
+// Enable floats.
+int _fltused = 42;
+
+// TODO: Replace this memset with something faster. Possibly __movsb, explained here: https://hero.handmade.network/forums/code-discussion/t/157
+void* CDECL memset(void* ptr, int value, size_t byteCount)
+{
+	u8 val = (u8)value;
+	u8* bytes = (u8*)ptr;
+	while (byteCount--)
+	{
+		*bytes++ = val;
+	}
+	return ptr;
+}
+
+// TODO: Replace this with faster memcpy code.
+void* CDECL memcpy(void* dst, const void* src, size_t byteCount)
+{
+	u8* dst8 = (u8*)dst;
+	const u8* src8 = (const u8*)src;
+	while (byteCount--)
+	{
+		*dst8++ = *src8++;
+	}
+	return dst;
 }
 

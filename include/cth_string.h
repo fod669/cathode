@@ -15,5 +15,7 @@ str8				str8_from_cstring(char* s);
 
 str8*				str8_parse_command_line(Arena* arena, str8 commandLine, int* out_argCount);
 
+str8				str8_push(Arena* arena, str8 s);
+
 #endif // CTH_STRING_H_
 
