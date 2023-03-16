@@ -4,7 +4,7 @@ typedef struct _CritSec
 	CRITICAL_SECTION data;
 } CritSec;
 
-inline u32 os_thread_get_ID()
+inline u32 os_thread_get_ID(void)
 {
 	// TODO: Implement me!
 	return 0;

@@ -29,5 +29,7 @@ void				os_output_debug_string(const char* buf);
 
 void				os_console_write(const char* buf, int length, eConsoleTextColour colour);
 
+void				os_log_last_error(void);
+
 #endif // CTH_OS_H_
 
