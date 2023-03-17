@@ -15,10 +15,11 @@ typedef uint16_t				u16;
 typedef uint32_t				u32;
 typedef uint64_t				u64;
 
-#define EXIT_SUCCESS			0
-#define EXIT_FAILURE			1
-#define EXIT_CODE_ERROR_FATAL	100
-#define EXIT_CODE_ASSERT		101
+#define EXIT_SUCCESS					0
+#define EXIT_FAILURE					1
+#define EXIT_CODE_ERROR_FATAL			100
+#define EXIT_CODE_ASSERT				101
+#define EXIT_CODE_ARENA_CREATE_FAIL		102
 
 #ifndef __cplusplus
 	#define alignas _Alignas

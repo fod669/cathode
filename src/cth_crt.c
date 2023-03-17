@@ -28,15 +28,25 @@ int cth_main(Arena* arena, int argc, str8 argv[]);
 
 NORETURN void STDCALL crt_entry(void)
 {
+	int result = EXIT_SUCCESS;
+
 	crt_init();
 	os_crt_init();
+
 	Arena* arena = arena_create(STR8("CRT"), MEGABYTES(10), 0, NULL);
+	if(arena == NULL)
+	{
+		result = EXIT_CODE_ARENA_CREATE_FAIL;
+	}
+	else
+	{
+		int argc = 0;
+		str8* argv = str8_parse_command_line(arena, os_get_command_line_args_str8(), &argc);
+		result = cth_main(arena, argc, argv);
 
-	int argc = 0;
-	str8* argv = str8_parse_command_line(arena, os_get_command_line_args_str8(), &argc);
-	int result = cth_main(arena, argc, argv);
+		arena_destroy(arena);
+	}
 
-	arena_destroy(arena);
 	os_crt_shutdown();
 	crt_shutdown();
 
