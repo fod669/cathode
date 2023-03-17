@@ -29,6 +29,7 @@ typedef uint64_t				u64;
 #define CDECL					__cdecl
 #define STDCALL					__stdcall
 
+#define ATTR_UNUSED				__attribute__((unused))
 #define NORETURN				__declspec(noreturn)
 
 // __fastfail breaks in a debugger, or immediately terminates the calling process with minimum overhead.

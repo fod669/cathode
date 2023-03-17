@@ -34,11 +34,11 @@ void os_crt_shutdown(void)
 
 }
 
-str8 os_get_command_line_args_str8(void)
+str8_c os_get_command_line_args_str8(void)
 {
 	char* cmdLine = GetCommandLineA();
 	ASSERT(cmdLine != NULL);
-	return STR8(cmdLine);
+	return STR8C(cmdLine);
 }
 
 NORETURN void os_exit_process(int result)

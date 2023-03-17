@@ -23,7 +23,9 @@
 #include "include/cth_string.h"
 #include "include/cth_arena.h"
 #include "include/cth_os.h"
+#include "include/cth_crt.h"
 
+// Inlines go here.
 #include "include/cth_string.inl"
 
 #if CTH_OS_WINDOWS

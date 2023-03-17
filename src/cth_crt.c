@@ -23,9 +23,6 @@ void crt_shutdown(void)
 	os_critsec_delete(&g_crt.logCritSec);
 }
 
-// User entry point.
-int cth_main(Arena* arena, int argc, str8 argv[]);
-
 NORETURN void STDCALL crt_entry(void)
 {
 	int result = EXIT_SUCCESS;
@@ -33,7 +30,7 @@ NORETURN void STDCALL crt_entry(void)
 	crt_init();
 	os_crt_init();
 
-	Arena* arena = arena_create(STR8("CRT"), MEGABYTES(10), 0, NULL);
+	Arena* arena = arena_create(STR8C("CRT"), MEGABYTES(10), 0, NULL);
 	if(arena == NULL)
 	{
 		result = EXIT_CODE_ARENA_CREATE_FAIL;
@@ -41,7 +38,7 @@ NORETURN void STDCALL crt_entry(void)
 	else
 	{
 		int argc = 0;
-		str8* argv = str8_parse_command_line(arena, os_get_command_line_args_str8(), &argc);
+		str8_c* argv = str8_parse_command_line(arena, os_get_command_line_args_str8(), &argc);
 		result = cth_main(arena, argc, argv);
 
 		arena_destroy(arena);

@@ -15,7 +15,7 @@ typedef enum eConsoleTextColour
 	CTC_COUNT
 } eConsoleTextColour;
 
-str8				os_get_command_line_args_str8(void);
+str8_c				os_get_command_line_args_str8(void);
 NORETURN void		os_exit_process(int result);
 
 u8*					os_thread_get_TIB(void);		// Thread Information Block
