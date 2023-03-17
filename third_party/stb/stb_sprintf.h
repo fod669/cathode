@@ -5,6 +5,9 @@
 // allowed types:  sc uidBboXx p AaGgEef n
 // lengths      :  hh h ll j z t I64 I32 I
 //
+// custom allowed types: (BDarcy)
+// %P - str8 and str8_c
+//
 // Contributors:
 //    Fabian "ryg" Giesen (reformatting)
 //    github:aganm (attribute format)
@@ -592,6 +595,26 @@ STBSP__PUBLICDEF int STB_SPRINTF_DECORATE(vsprintfcb)(STBSP_SPRINTFCB *callback,
          // get the length, limited to desired precision
          // always limit to ~0u chars since our counts are 32b
          l = stbsp__strlen_limited(s, (pr >= 0) ? pr : ~0u);
+         lead[0] = 0;
+         tail[0] = 0;
+         pr = 0;
+         dp = 0;
+         cs = 0;
+         // copy the string in
+         goto scopy;
+
+      case 'P':
+         // get the string
+         str8 tmpStr = va_arg(va, str8);
+         // get the length, limited to desired precision
+         // always limit to ~0u chars since our counts are 32b
+         l = (pr >= 0 && pr < (int)tmpStr.len) ? pr : (int)tmpStr.len;
+         s = tmpStr.str;
+         if (s == 0)
+         {
+            s = (char *)"null";
+            l = 4;
+         }
          lead[0] = 0;
          tail[0] = 0;
          pr = 0;
