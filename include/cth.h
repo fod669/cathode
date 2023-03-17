@@ -29,6 +29,7 @@ typedef uint64_t				u64;
 #define CDECL					__cdecl
 #define STDCALL					__stdcall
 
+#define ATTR_USED				__attribute__((used))
 #define ATTR_UNUSED				__attribute__((unused))
 #define NORETURN				__declspec(noreturn)
 

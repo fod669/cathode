@@ -54,7 +54,7 @@ NORETURN void STDCALL crt_entry(void)
 // ================================================================================================
 
 // Enable floats.
-int _fltused = 42;
+int _fltused ATTR_USED = 42;
 
 // TODO: Replace this memset with something faster. Possibly __movsb, explained here: https://hero.handmade.network/forums/code-discussion/t/157
 void* CDECL memset(void* ptr, int value, size_t byteCount)
