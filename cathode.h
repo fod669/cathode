@@ -24,6 +24,8 @@
 #include "include/cth_arena.h"
 #include "include/cth_os.h"
 
+#include "include/cth_string.inl"
+
 #if CTH_OS_WINDOWS
 	#define WIN32_LEAN_AND_MEAN
 	#define NOMINMAX
