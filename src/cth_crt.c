@@ -23,6 +23,9 @@ void crt_shutdown(void)
 	os_critsec_delete(&g_crt.logCritSec);
 }
 
+// User entry point.
+int cth_main(Arena* arena, int argc, str8_c argv[]);
+
 NORETURN void STDCALL crt_entry(void)
 {
 	int result = EXIT_SUCCESS;

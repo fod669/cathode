@@ -32,6 +32,8 @@ typedef uint64_t				u64;
 #define ATTR_USED				__attribute__((used))
 #define ATTR_UNUSED				__attribute__((unused))
 #define NORETURN				__declspec(noreturn)
+#define NOINLINE				__attribute__((noinline))
+#define RESTRICT				restrict
 
 // __fastfail breaks in a debugger, or immediately terminates the calling process with minimum overhead.
 #define FAST_FAIL(_ExitCode)	__fastfail(_ExitCode)

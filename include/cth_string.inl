@@ -8,17 +8,6 @@ inline u64 str8_len(const char* s)
 	return end - s;
 }
 
-inline str8 str8_from_cstring(char* s)
-{
-	ASSERT(s != NULL);
-	str8 result =
-	{
-		.str = s,
-		.len = str8_len(s)
-	};
-	return result;
-}
-
 inline str8_c str8_c_from_cstring(const char* s)
 {
 	ASSERT(s != NULL);
@@ -38,7 +27,7 @@ inline str8 str8_push(Arena* arena, str8_c s)
 		.str = PUSH_TYPE_ARRAY(arena, char, s.len),
 		.len = s.len
 	};
-	memcpy(result.str, s.str, s.len);
+	os_mem_cpy(result.str, s.str, s.len);
 	return result;
 }
 
@@ -51,7 +40,7 @@ inline str8 str8_push_cstring(Arena* arena, const char* s)
 		.str = PUSH_TYPE_ARRAY(arena, char, len),
 		.len = len
 	};
-	memcpy(result.str, s, result.len);
+	os_mem_cpy(result.str, s, result.len);
 	return result;
 }
 

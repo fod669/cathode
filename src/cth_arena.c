@@ -132,7 +132,7 @@ void arena_pop(Arena* arena, size_t byteCount, bool decommit)
 		}
 	}
 
-	memset(newPos, 0, arena->currentPos - newPos);
+	os_mem_zero(newPos, arena->currentPos - newPos);
 	arena->currentPos = newPos;
 }
 

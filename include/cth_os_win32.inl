@@ -52,3 +52,33 @@ inline void os_output_debug_string(const char* buf)
 	OutputDebugStringA(buf);
 }
 
+// TODO: Replace this memset with something faster. Possibly __movsb, explained here: https://hero.handmade.network/forums/code-discussion/t/157
+// Maybe __stosd also?
+inline void* os_mem_set(void* ptr, u8 val, size_t byteCount)
+{
+	u8* bytes = (u8*)ptr;
+	while (byteCount--)
+	{
+		*bytes++ = val;
+	}
+	return ptr;
+}
+
+// TODO: Replace with some type of faster ZeroMemory call.
+inline void* os_mem_zero(void* ptr, size_t byteCount)
+{
+	return os_mem_set(ptr, 0, byteCount);
+}
+
+// TODO: Replace this with faster memcpy code.
+inline void* os_mem_cpy(void* RESTRICT dst, const void* RESTRICT src, size_t byteCount)
+{
+	u8* dst8 = (u8*)dst;
+	const u8* src8 = (const u8*)src;
+	while (byteCount--)
+	{
+		*dst8++ = *src8++;
+	}
+	return dst;
+}
+

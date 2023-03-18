@@ -20,7 +20,6 @@ typedef struct _str8_c
 // The above structs always need to be interchangable.
 STATIC_ASSERT(sizeof(str8) == sizeof(str8_c));
 
-#define STR8(_X)	str8_from_cstring(_X)
 #define STR8C(_X)	str8_c_from_cstring(_X)
 
 u64					str8_len(const char* s);

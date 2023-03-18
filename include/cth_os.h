@@ -40,5 +40,9 @@ void*				os_mem_commit(void* address, size_t byteCount);
 bool				os_mem_decommit(void* address, size_t byteCount);
 bool				os_mem_release(void* address);
 
+void*				os_mem_set(void* ptr, u8 val, size_t byteCount);
+void*				os_mem_zero(void* ptr, size_t byteCount);
+void*				os_mem_cpy(void* RESTRICT dst, const void* RESTRICT src, size_t byteCount);
+
 #endif // CTH_OS_H_
 
