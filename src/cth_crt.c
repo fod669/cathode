@@ -6,18 +6,18 @@ typedef struct _CathodeContext
 	char			sprintfBuffer[STB_SPRINTF_MIN];
 } CathodeContext;
 
-CathodeContext g_crt;
+internal_var CathodeContext g_crt;
 
-void os_crt_init(void);
-void os_crt_shutdown(void);
+internal_func void os_crt_init(void);
+internal_func void os_crt_shutdown(void);
 
-void crt_init(void)
+internal_func void crt_init(void)
 {
 	os_critsec_init(&g_crt.logCritSec);
 	g_crt.initialised = true;
 }
 
-void crt_shutdown(void)
+internal_func void crt_shutdown(void)
 {
 	g_crt.initialised = false;
 	os_critsec_delete(&g_crt.logCritSec);

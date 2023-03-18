@@ -25,7 +25,7 @@ void log_printf_dbg(eLogErrorLevel errorLevel, const char* file, u32 line, const
 	os_critsec_leave(&g_crt.logCritSec);
 }
 
-static char* printf_callback(const char* buf, void* user, int len)
+internal_func char* printf_callback(const char* buf, void* user, int len)
 {
 	eConsoleTextColour textColours[LOG_LEVEL_COUNT] =
 	{
