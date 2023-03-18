@@ -34,7 +34,8 @@ typedef uint64_t				u64;
 #define NORETURN				__declspec(noreturn)
 
 // __fastfail breaks in a debugger, or immediately terminates the calling process with minimum overhead.
-#define DEBUG_BREAK_OR_TERMINATE(_ExitCode) __fastfail(_ExitCode)
+#define FAST_FAIL(_ExitCode)	__fastfail(_ExitCode)
+#define DEBUG_BREAK()			__debugbreak()
 
 #define IS_POWER_OF_TWO(_X)				((_X) && !((_X) & ((_X) - 1)))
 #define ALIGN_DOWN_TO_POW2(_X, _Pow2)	((_X) & ~((_Pow2) - 1))

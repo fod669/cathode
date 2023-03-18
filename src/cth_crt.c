@@ -57,7 +57,7 @@ NORETURN void STDCALL crt_entry(void)
 int _fltused ATTR_USED = 42;
 
 // TODO: Replace this memset with something faster. Possibly __movsb, explained here: https://hero.handmade.network/forums/code-discussion/t/157
-void* CDECL memset(void* ptr, int value, size_t byteCount)
+void* memset(void* ptr, int value, size_t byteCount)
 {
 	u8 val = (u8)value;
 	u8* bytes = (u8*)ptr;
@@ -69,7 +69,7 @@ void* CDECL memset(void* ptr, int value, size_t byteCount)
 }
 
 // TODO: Replace this with faster memcpy code.
-void* CDECL memcpy(void* dst, const void* src, size_t byteCount)
+void* memcpy(void* dst, const void* src, size_t byteCount)
 {
 	u8* dst8 = (u8*)dst;
 	const u8* src8 = (const u8*)src;
