@@ -30,7 +30,7 @@ str8_c				str8_c_from_cstring(const char* s);
 str8				str8_push(Arena* arena, str8_c s);
 str8				str8_push_cstring(Arena* arena, const char* s);
 
-str8_c*				str8_parse_command_line(Arena* arena, str8_c cmdLine, int* out_argCount);
+str8_c*				str8_extract_arg_vector(Arena* arena, str8_c cmdLine, int* out_argCount);
 
 #endif // CTH_STRING_H_
 

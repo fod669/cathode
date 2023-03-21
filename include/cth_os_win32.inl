@@ -75,6 +75,10 @@ inline void* os_mem_cpy(void* RESTRICT dst, const void* RESTRICT src, size_t byt
 {
 	u8* dst8 = (u8*)dst;
 	const u8* src8 = (const u8*)src;
+
+	// Assert that the ranges don't overlap because we're using RESTRICT.
+	ASSERT(((dst8 + byteCount) < src8) || ((src8 + byteCount) < dst8));
+
 	while (byteCount--)
 	{
 		*dst8++ = *src8++;

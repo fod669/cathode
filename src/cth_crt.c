@@ -41,7 +41,7 @@ NORETURN void STDCALL crt_entry(void)
 	else
 	{
 		int argc = 0;
-		str8_c* argv = str8_parse_command_line(arena, os_get_command_line_args_str8(), &argc);
+		str8_c* argv = str8_extract_arg_vector(arena, os_get_command_line_args_str8(), &argc);
 		result = cth_main(arena, argc, argv);
 
 		arena_destroy(arena);
