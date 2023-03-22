@@ -1,5 +1,5 @@
 
-typedef struct _CritSec
+typedef struct CritSec
 {
 	CRITICAL_SECTION data;
 } CritSec;

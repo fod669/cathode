@@ -3,34 +3,40 @@
 #ifndef CTH_STRING_H_
 #define CTH_STRING_H_
 
-// NOTE: These strings are not null terminated.
-// You can print these in a format string with "%P".
-typedef struct _str8
+// You can print all these string types in a format string with "%P".
+// eg: log_info("string: %P\n", (str8){ "Hi", 2 });
+typedef struct str8
 {
-	char*			str;
+	char*			str;	// This is NULL terminated.
 	u64				len;
 } str8;
 
-typedef struct _str8_c
+typedef struct str8_const
 {
-	const char*		str;
+	const char*		str;	// This is NULL terminated.
 	u64				len;
-} str8_c;
+} str8_const;
+
+typedef struct str8_view
+{
+	const char*		str;	// This is NOT necessarily NULL terminated.
+	u64				len;
+} str8_view;
 
 // The above structs always need to be interchangable.
-STATIC_ASSERT(sizeof(str8) == sizeof(str8_c));
+STATIC_ASSERT(sizeof(str8) == sizeof(str8_const));
+STATIC_ASSERT(sizeof(str8) == sizeof(str8_view));
 
-#define STR8C(_X)	str8_c_from_cstring(_X)
+#define _S8C(_X)	str8_const_from_cstring(_X)
 
 u64					str8_len(const char* s);
 
-str8				str8_from_cstring(char* s);
-str8_c				str8_c_from_cstring(const char* s);
+str8_const			str8_const_from_cstring(const char* s);
 
-str8				str8_push(Arena* arena, str8_c s);
+str8				str8_push(Arena* arena, str8_const s);
 str8				str8_push_cstring(Arena* arena, const char* s);
 
-str8_c*				str8_extract_arg_vector(Arena* arena, str8_c cmdLine, int* out_argCount);
+str8_const*			str8_extract_arg_vector(Arena* arena, str8_const cmdLine, int* out_argCount);
 
 #endif // CTH_STRING_H_
 

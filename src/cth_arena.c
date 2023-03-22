@@ -4,7 +4,7 @@
 // Therefore this function can allocate a minimum of OS page size bytes.
 // NOTE: Can return NULL if the OS fails to reserve the memory.
 // NOTE: The Arena object itself and the name string (if not NULL) will be pushed to the beginning of the arena memory.
-Arena* arena_create(str8_c name, size_t maxSizeBytes, size_t minBlockSizeBytes, void* baseAddress)
+Arena* arena_create(const char* name, size_t maxSizeBytes, size_t minBlockSizeBytes, void* baseAddress)
 {
 	ASSERT(maxSizeBytes != 0);
 	Arena* newArena = NULL;
@@ -21,7 +21,7 @@ Arena* arena_create(str8_c name, size_t maxSizeBytes, size_t minBlockSizeBytes, 
 		if (mem == NULL)
 		{
 			log_error("Failed to reserve memory!\n");
-			log_error("Name:                 %P\n", name);
+			log_error("Name:                 %s\n", name);
 			log_error("Max Size Bytes:       %zu\n", maxSizeBytes);
 			log_error("Min Block Size Bytes: %zu\n", minBlockSizeBytes);
 			log_error("Base Address:         %p\n", baseAddress);
@@ -44,9 +44,9 @@ Arena* arena_create(str8_c name, size_t maxSizeBytes, size_t minBlockSizeBytes, 
 			newArena = PUSH_TYPE(&tmpArena, Arena);
 			*newArena = tmpArena;
 
-			if (name.str != NULL)
+			if (name != NULL)
 			{
-				newArena->name = str8_push(newArena, name);
+				newArena->name = str8_push_cstring(newArena, name);
 			}
 
 			newArena->userMemoryStartPos = newArena->currentPos;

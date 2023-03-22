@@ -3,7 +3,7 @@
 #ifndef CTH_H_
 #define CTH_H_
 
-typedef struct _Arena					Arena;
+typedef struct Arena					Arena;
 
 typedef int8_t							s8;
 typedef int16_t							s16;

@@ -3,7 +3,7 @@
 #ifndef CTH_ARENA_H_
 #define CTH_ARENA_H_
 
-typedef struct _Arena
+typedef struct Arena
 {
 	u8*			reserveBegin;			// Pointer to the beginning of the reserved virtual memory region.
 	u8*			currentPos;				// Pointer to (one past) the end of the memory pushed so far.
@@ -19,7 +19,7 @@ typedef struct _Arena
 // NOTE: arena_create() can return NULL if it fails to reserve the memory.
 // NOTE: The Arena itself is placed at the beginning of the allocated memory, so you get sizeof(Arena) fewer useable bytes
 //       than what you set in maxSizeBytes.
-Arena*			arena_create(str8_c name, size_t maxSizeBytes, size_t minBlockSizeBytes, void* baseAddress);
+Arena*			arena_create(const char* name, size_t maxSizeBytes, size_t minBlockSizeBytes, void* baseAddress);
 void			arena_destroy(Arena* arena);
 
 void*			arena_push(Arena* arena, size_t byteCount, size_t byteAlignment);

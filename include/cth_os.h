@@ -3,7 +3,7 @@
 #ifndef CTH_OS_H_
 #define CTH_OS_H_
 
-typedef struct _CritSec CritSec;
+typedef struct CritSec CritSec;
 
 typedef enum eConsoleTextColour
 {
@@ -15,7 +15,7 @@ typedef enum eConsoleTextColour
 	CTC_COUNT
 } eConsoleTextColour;
 
-str8_c				os_get_command_line_args_str8(void);
+str8_const			os_get_command_line_args_str8(void);
 NORETURN void		os_exit_process(int result);
 
 u8*					os_thread_get_TIB(void);		// Thread Information Block
@@ -43,6 +43,8 @@ bool				os_mem_release(void* address);
 void*				os_mem_set(void* ptr, u8 val, size_t byteCount);
 void*				os_mem_zero(void* ptr, size_t byteCount);
 void*				os_mem_cpy(void* RESTRICT dst, const void* RESTRICT src, size_t byteCount);
+
+int					os_message_box(void);
 
 #endif // CTH_OS_H_
 

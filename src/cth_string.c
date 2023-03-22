@@ -4,18 +4,18 @@
 // https://www.daviddeley.com/autohotkey/parameters/parameters.htm
 // This is how powershell parses the command line string. I'm doing it more this way, using ` as the escape character.
 // https://ss64.com/ps/syntax-esc.html
-str8_c* str8_extract_arg_vector(Arena* arena, str8_c cmdLine, int* out_argCount)
+str8_const* str8_extract_arg_vector(Arena* arena, str8_const cmdLine, int* out_argCount)
 {
-	str8_c* argv = NULL;
+	str8_const* argv = NULL;
 	*out_argCount = 0;
 
-	if (cmdLine.str)
+	if (cmdLine.len > 0)
 	{
 		// Memory for all the argument strings.
-		char* argMem = PUSH_TYPE_ARRAY(arena, char, cmdLine.len);
+		char* argMem = PUSH_TYPE_ARRAY(arena, char, cmdLine.len + 1);
 
 		// First argument.
-		argv = PUSH_TYPE(arena, str8_c);
+		argv = PUSH_TYPE(arena, str8_const);
 		argv->str = argMem;
 
 		str8* currentArg = (str8*)argv;
@@ -67,7 +67,7 @@ str8_c* str8_extract_arg_vector(Arena* arena, str8_c cmdLine, int* out_argCount)
 				argEnded = false;
 
 				str8* newArg = PUSH_TYPE(arena, str8);
-				newArg->str = currentArg->str + currentArg->len;
+				newArg->str = currentArg->str + currentArg->len + 1;
 
 				currentArg = newArg;
 				++(*out_argCount);
@@ -75,6 +75,15 @@ str8_c* str8_extract_arg_vector(Arena* arena, str8_c cmdLine, int* out_argCount)
 
 			currentArg->str[currentArg->len++] = c;
 		}
+
+		#if CTH_DEBUG
+			for (int i = 0; i < *out_argCount; ++i)
+			{
+				ASSERT(argv[i].str[argv[i].len] == '\0');
+			}
+			str8_const* lastArg = &argv[*out_argCount - 1];
+			ASSERT((lastArg->str + lastArg->len) <= (argMem + cmdLine.len));
+		#endif
 	}
 
 	return argv;

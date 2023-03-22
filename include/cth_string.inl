@@ -8,26 +8,28 @@ inline u64 str8_len(const char* s)
 	return end - s;
 }
 
-inline str8_c str8_c_from_cstring(const char* s)
+inline str8_const str8_const_from_cstring(const char* s)
 {
 	ASSERT(s != NULL);
-	str8_c result =
+	str8_const result =
 	{
 		.str = s,
 		.len = str8_len(s)
 	};
+	ASSERT(result.str[result.len] == '\0');
 	return result;
 }
 
-inline str8 str8_push(Arena* arena, str8_c s)
+inline str8 str8_push(Arena* arena, str8_const s)
 {
 	ASSERT(s.str != NULL);
 	str8 result =
 	{
-		.str = PUSH_TYPE_ARRAY(arena, char, s.len),
+		.str = PUSH_TYPE_ARRAY(arena, char, s.len + 1),
 		.len = s.len
 	};
 	os_mem_cpy(result.str, s.str, s.len);
+	ASSERT(result.str[result.len] == '\0');
 	return result;
 }
 
@@ -37,10 +39,11 @@ inline str8 str8_push_cstring(Arena* arena, const char* s)
 	u64 len = str8_len(s);
 	str8 result =
 	{
-		.str = PUSH_TYPE_ARRAY(arena, char, len),
+		.str = PUSH_TYPE_ARRAY(arena, char, len + 1),
 		.len = len
 	};
-	os_mem_cpy(result.str, s, result.len);
+	os_mem_cpy(result.str, s, len);
+	ASSERT(result.str[result.len] == '\0');
 	return result;
 }
 

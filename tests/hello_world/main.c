@@ -1,7 +1,7 @@
 
 #include "cathode.h"
 
-int cth_main(Arena* arena, int argc, str8_c argv[])
+int cth_main(Arena* arena, int argc, str8_const argv[])
 {
 	log_info("Hello world!\n");
 	log_warning("Hello world!\n");

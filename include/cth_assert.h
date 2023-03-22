@@ -29,13 +29,13 @@ Proper ASSERT() usage:
 #define STATIC_ASSERT(_Exp)				STATIC_ASSERT_MSG(_Exp, #_Exp)
 
 #if CTH_ENABLE_ASSERTS
-	// TODO: Put in a popup with "abort, retry, continue" options.
+	// TODO: Put in a popup with "abort, debug, continue" options.
 	#define ASSERT(_Exp)																									\
 		do																													\
 		{																													\
 			if (!(_Exp))																									\
 			{																												\
-				log_critical("Assert failed!\n[%u] %s:%d: \"%s\"\n", os_thread_get_ID(), __FILE__, __LINE__, #_Exp);		\
+				log_critical("Assert failed!\n[%u] %s(%d): \"%s\"\n", os_thread_get_ID(), __FILE__, __LINE__, #_Exp);		\
 				DEBUG_BREAK();																								\
 			}																												\
 		}																													\
@@ -44,7 +44,7 @@ Proper ASSERT() usage:
 	// An assert with no error message or anything. Use this in cases where the log might not even have been initialised yet.
 	#define ASSERT_RAW(_Exp)	do { if (!(_Exp)) { DEBUG_BREAK(); } } while (0)
 #else
-	#define ASSERT(_Exp)		do { (void)sizeof(_Exp); } while (0)
+	#define ASSERT(_Exp)		do { (void)0; } while (0)
 	#define ASSERT_RAW			ASSERT
 #endif
 

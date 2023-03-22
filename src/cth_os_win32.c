@@ -1,5 +1,5 @@
 
-typedef struct _OSContext
+typedef struct OSContext
 {
 	size_t		pageSize;
 	void*		lowestAccessibleAddress;
@@ -34,11 +34,11 @@ internal_func void os_crt_shutdown(void)
 
 }
 
-str8_c os_get_command_line_args_str8(void)
+str8_const os_get_command_line_args_str8(void)
 {
 	char* cmdLine = GetCommandLineA();
 	ASSERT(cmdLine != NULL);
-	return STR8C(cmdLine);
+	return _S8C(cmdLine);
 }
 
 NORETURN void os_exit_process(int result)

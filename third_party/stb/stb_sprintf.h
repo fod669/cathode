@@ -6,7 +6,7 @@
 // lengths      :  hh h ll j z t I64 I32 I
 //
 // custom allowed types: (BDarcy)
-// %P - str8 and str8_c
+// %P - str8, str8_const, and str8_view
 //
 // Contributors:
 //    Fabian "ryg" Giesen (reformatting)
