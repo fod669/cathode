@@ -198,3 +198,109 @@ bool os_mem_release(void* address)
 	return result;
 }
 
+typedef struct MessageBoxProcInfo
+{
+	HHOOK			msgBoxHook;
+	const char*		buttonText1;
+	const char*		buttonText2;
+	const char*		buttonText3;
+	int				buttonCount;
+} MessageBoxProcInfo;
+
+internal_var MessageBoxProcInfo* g_messageBoxProcInfo;
+
+internal_func LRESULT CALLBACK CBTProc(int nCode, WPARAM wParam, LPARAM lParam)
+{
+	ASSERT_RAW(g_messageBoxProcInfo != NULL);
+	if (nCode == HCBT_ACTIVATE)
+	{
+		UnhookWindowsHookEx(g_messageBoxProcInfo->msgBoxHook);
+
+		HWND hWnd = (HWND)wParam;
+		if (g_messageBoxProcInfo->buttonCount == 1)
+		{
+			SetDlgItemTextA(hWnd, IDOK, g_messageBoxProcInfo->buttonText1);
+		}
+		else
+		{
+			SetDlgItemTextA(hWnd, IDYES, g_messageBoxProcInfo->buttonText1);
+			SetDlgItemTextA(hWnd, IDNO, g_messageBoxProcInfo->buttonText2);
+
+			if (g_messageBoxProcInfo->buttonCount == 3)
+			{
+				SetDlgItemTextA(hWnd, IDCANCEL, g_messageBoxProcInfo->buttonText3);
+			}
+		}
+
+		g_messageBoxProcInfo = NULL;
+		return 0;
+	}
+
+	return CallNextHookEx(g_messageBoxProcInfo->msgBoxHook, nCode, wParam, lParam);
+}
+
+int os_message_box(const char* title, const char* msg, const char* buttonText1, const char* buttonText2, const char* buttonText3, eDefaultMessageBoxButton defaultButton)
+{
+	ASSERT_RAW(title != NULL);
+	ASSERT_RAW(msg != NULL);
+	ASSERT_RAW(buttonText1 != NULL);
+
+	UINT type;
+	int buttonCount;
+
+	if (buttonText3 != NULL)
+	{
+		ASSERT_RAW(buttonText2 != NULL);
+		type = MB_YESNOCANCEL;
+		buttonCount = 3;
+	}
+	else if(buttonText2 != NULL)
+	{
+		type = MB_YESNO;
+		buttonCount = 2;
+	}
+	else
+	{
+		type = MB_OK;
+		buttonCount = 1;
+	}
+
+	type |= MB_ICONEXCLAMATION;
+
+	if (defaultButton > (buttonCount - 1))
+	{
+		defaultButton = (buttonCount - 1);
+	}
+	switch (defaultButton)
+	{
+		default:
+		case DMBB_ONE:		type |= MB_DEFBUTTON1;	break;
+		case DMBB_TWO:		type |= MB_DEFBUTTON2;	break;
+		case DMBB_THREE:	type |= MB_DEFBUTTON3;	break;
+	}
+
+	MessageBoxProcInfo mbpi =
+	{
+		.msgBoxHook = SetWindowsHookEx(WH_CBT, CBTProc, NULL, os_thread_get_ID()),
+		.buttonText1 = buttonText1,
+		.buttonText2 = buttonText2,
+		.buttonText3 = buttonText3,
+		.buttonCount = buttonCount,
+	};
+	g_messageBoxProcInfo = &mbpi;
+
+	int ret = MessageBox(NULL, msg, title, type);
+
+	int buttonPressed = 0;
+	switch (ret)
+	{
+		default:
+		case IDOK:
+		case IDYES:		buttonPressed = 0;		break;
+		case IDNO:		buttonPressed = 1;		break;
+		case IDCANCEL:	buttonPressed = 2;		break;
+	}
+
+	return buttonPressed;
+}
+

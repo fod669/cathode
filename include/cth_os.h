@@ -44,7 +44,16 @@ void*				os_mem_set(void* ptr, u8 val, size_t byteCount);
 void*				os_mem_zero(void* ptr, size_t byteCount);
 void*				os_mem_cpy(void* RESTRICT dst, const void* RESTRICT src, size_t byteCount);
 
-int					os_message_box(void);
+typedef enum eDefaultMessageBoxButton
+{
+	DMBB_ONE,
+	DMBB_TWO,
+	DMBB_THREE,
+
+	DMBB_COUNT
+} eDefaultMessageBoxButton;
+
+int					os_message_box(const char* title, const char* msg, const char* buttonText1, const char* buttonText2, const char* buttonText3, eDefaultMessageBoxButton defaultButton);
 
 #endif // CTH_OS_H_
 

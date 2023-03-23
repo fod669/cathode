@@ -31,6 +31,8 @@ typedef uint64_t						u64;
 	#define alignof						_Alignof
 #endif
 
+#define countof(_Array)					((sizeof(_Array) / sizeof(0[_Array])) / ((size_t)(!(sizeof(_Array) % sizeof(0[_Array])))))
+
 #define CDECL							__cdecl
 #define STDCALL							__stdcall
 

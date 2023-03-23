@@ -29,14 +29,18 @@ Proper ASSERT() usage:
 #define STATIC_ASSERT(_Exp)				STATIC_ASSERT_MSG(_Exp, #_Exp)
 
 #if CTH_ENABLE_ASSERTS
-	// TODO: Put in a popup with "abort, debug, continue" options.
 	#define ASSERT(_Exp)																									\
 		do																													\
 		{																													\
 			if (!(_Exp))																									\
 			{																												\
 				log_critical("Assert failed!\n[%u] %s(%d): \"%s\"\n", os_thread_get_ID(), __FILE__, __LINE__, #_Exp);		\
-				DEBUG_BREAK();																								\
+				switch (os_message_box("Assert failed!", #_Exp, "Abort", "Debug", "Continue", DMBB_TWO))					\
+				{																											\
+					case 0: FAST_FAIL(EXIT_CODE_ASSERT); break;																\
+					case 1: DEBUG_BREAK(); break;																			\
+					default: break;																							\
+				}																											\
 			}																												\
 		}																													\
 		while (0)
