@@ -89,3 +89,58 @@ str8_const* str8_extract_arg_vector(Arena* arena, str8_const cmdLine, int* out_a
 	return argv;
 }
 
+str8 str8_printf(Arena* arena, const char* format, ...)
+{
+	va_list args;
+	va_start(args, format);
+	str8 s = str8_printfv(arena, format, args);
+	va_end(args);
+	return s;
+}
+
+typedef struct _Str8PrintfInfo
+{
+	Arena*			arena;
+	u64				stringLength;
+	u64				totalPushed;
+} _Str8PrintfInfo;
+
+internal_func char* _str8_printf_callback(const char* buf, void* user, int len)
+{
+	_Str8PrintfInfo* info = (_Str8PrintfInfo*)user;
+
+	info->stringLength += len;
+
+	char* stringBuffer = NULL;
+	if (len >= STB_SPRINTF_MIN)
+	{
+		stringBuffer = PUSH_TYPE_ARRAY(info->arena, char, STB_SPRINTF_MIN);
+		info->totalPushed += STB_SPRINTF_MIN;
+	}
+	return stringBuffer;
+}
+
+str8 str8_printfv(Arena* arena, const char* format, va_list args)
+{
+	char* stringBuffer = PUSH_TYPE_ARRAY(arena, char, STB_SPRINTF_MIN);
+
+	_Str8PrintfInfo info =
+	{
+		.arena			= arena,
+		.stringLength	= 0,
+		.totalPushed	= STB_SPRINTF_MIN
+	};
+
+	stbsp_vsprintfcb(_str8_printf_callback, &info, stringBuffer, format, args);
+	ASSERT(info.totalPushed > info.stringLength);
+	POP_BYTES(arena, info.totalPushed - info.stringLength - 1, false);
+
+	str8 s =
+	{
+		.str = stringBuffer,
+		.len = info.stringLength
+	};
+	ASSERT(s.str[s.len] == '\0');
+	return s;
+}
+

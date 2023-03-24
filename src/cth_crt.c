@@ -3,7 +3,6 @@ typedef struct CathodeContext
 {
 	bool			initialised;
 	CritSec			logCritSec;
-	char			sprintfBuffer[STB_SPRINTF_MIN];
 } CathodeContext;
 
 internal_var CathodeContext g_crt;

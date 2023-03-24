@@ -38,5 +38,8 @@ str8				str8_push_cstring(Arena* arena, const char* s);
 
 str8_const*			str8_extract_arg_vector(Arena* arena, str8_const cmdLine, int* out_argCount);
 
+str8				str8_printf(Arena* arena, const char* format, ...) STBSP__ATTRIBUTE_FORMAT(2, 3);
+str8				str8_printfv(Arena* arena, const char* format, va_list args);
+
 #endif // CTH_STRING_H_
 

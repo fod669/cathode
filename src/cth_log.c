@@ -25,7 +25,13 @@ void log_printf_dbg(eLogErrorLevel errorLevel, const char* file, u32 line, const
 	os_critsec_leave(&g_crt.logCritSec);
 }
 
-internal_func char* printf_callback(const char* buf, void* user, int len)
+typedef struct _LogPrintfInfo
+{
+	eLogErrorLevel	errorLevel;
+	char			buffer[STB_SPRINTF_MIN + 1];	// Space for a NULL terminator.
+} _LogPrintfInfo;
+
+internal_func char* _log_printf_callback(const char* buf, void* user, int len)
 {
 	eConsoleTextColour textColours[LOG_LEVEL_COUNT] =
 	{
@@ -34,19 +40,29 @@ internal_func char* printf_callback(const char* buf, void* user, int len)
 		CTC_RED,
 		CTC_RED_BACKGROUND
 	};
-	eLogErrorLevel errorLevel = (eLogErrorLevel)(u64)user;
-	ASSERT(errorLevel >= 0 && errorLevel < LOG_LEVEL_COUNT);
-	os_console_write(buf, len, textColours[errorLevel]);
+
+	_LogPrintfInfo* info = (_LogPrintfInfo*)user;
+	ASSERT(info->errorLevel >= 0 && info->errorLevel < LOG_LEVEL_COUNT);
+
+	// Make sure it's NULL terminated. Also fuck const.
+	((char*)buf)[len] = '\0';
+	os_console_write(buf, len, textColours[info->errorLevel]);
 	os_output_debug_string(buf);
-	return g_crt.sprintfBuffer;
+
+	return info->buffer;
 }
 
 void log_printfv(eLogErrorLevel errorLevel, const char* format, va_list args)
 {
 	ASSERT_RAW(g_crt.initialised);
 
+	_LogPrintfInfo info =
+	{
+		.errorLevel = errorLevel
+	};
+
 	os_critsec_enter(&g_crt.logCritSec);
-	stbsp_vsprintfcb(printf_callback, (void*)errorLevel, g_crt.sprintfBuffer, format, args);
+	stbsp_vsprintfcb(_log_printf_callback, (void*)&info, info.buffer, format, args);
 	os_critsec_leave(&g_crt.logCritSec);
 }
 
