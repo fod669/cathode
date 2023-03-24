@@ -2,6 +2,6 @@
 	"files.associations": {
 		"stdbool.h": "c",
 		"stdint.h": "c",
-		"commctrl.h": "c"
+		"stdarg.h": "c",
 	}
 }

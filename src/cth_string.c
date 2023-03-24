@@ -89,15 +89,6 @@ str8_const* str8_extract_arg_vector(Arena* arena, str8_const cmdLine, int* out_a
 	return argv;
 }
 
-str8 str8_printf(Arena* arena, const char* format, ...)
-{
-	va_list args;
-	va_start(args, format);
-	str8 s = str8_printfv(arena, format, args);
-	va_end(args);
-	return s;
-}
-
 typedef struct _Str8PrintfInfo
 {
 	Arena*			arena;

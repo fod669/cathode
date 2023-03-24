@@ -5,6 +5,7 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include <stdarg.h>
 
 // Make sure cth_defines.h is always first.
 #include "include/cth_defines.h"

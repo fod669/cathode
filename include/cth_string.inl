@@ -47,3 +47,12 @@ inline str8 str8_push_cstring(Arena* arena, const char* s)
 	return result;
 }
 
+inline str8 str8_printf(Arena* arena, const char* format, ...)
+{
+	va_list args;
+	va_start(args, format);
+	str8 s = str8_printfv(arena, format, args);
+	va_end(args);
+	return s;
+}
+
