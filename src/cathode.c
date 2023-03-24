@@ -1,6 +1,7 @@
 
 #include "cathode.h"
 
+// Make sure cth_crt.c is before any other cth_* source files.
 #include "src/cth_crt.c"
 
 #include "src/cth_log.c"

@@ -1,26 +1,29 @@
 
-typedef struct CathodeContext
+CathodeContext* g_crt;
+
+typedef struct _CathodePrivate
 {
-	bool			initialised;
 	CritSec			logCritSec;
-} CathodeContext;
+} _CathodePrivate;
+internal_var _CathodePrivate* g_cp;
 
-internal_var CathodeContext g_crt;
-
-internal_func void os_crt_init(void);
-internal_func void os_crt_shutdown(void);
-
-internal_func void crt_init(void)
+internal_func void _cathode_private_init(_CathodePrivate* cp)
 {
-	os_critsec_init(&g_crt.logCritSec);
-	g_crt.initialised = true;
+	ASSERT_RAW(cp != NULL);
+	g_cp = NULL;
+	os_critsec_init(&cp->logCritSec);
+	g_cp = cp;
 }
 
-internal_func void crt_shutdown(void)
+internal_func void _cathode_private_shutdown(_CathodePrivate* cp)
 {
-	g_crt.initialised = false;
-	os_critsec_delete(&g_crt.logCritSec);
+	ASSERT_RAW(cp != NULL);
+	g_cp = NULL;
+	os_critsec_delete(&cp->logCritSec);
 }
+
+internal_func void _os_crt_init(void);
+internal_func void _os_crt_shutdown(void);
 
 // User entry point.
 int cth_main(Arena* arena, int argc, str8_const argv[]);
@@ -29,25 +32,35 @@ NORETURN void STDCALL crt_entry(void)
 {
 	int result = EXIT_SUCCESS;
 
-	crt_init();
-	os_crt_init();
+	g_crt = NULL;
 
-	Arena* arena = arena_create("CRT", MEGABYTES(10), 0, NULL);
-	if(arena == NULL)
+	_CathodePrivate cathodePrivate = {0};
+	_cathode_private_init(&cathodePrivate);
+	_os_crt_init();
+
+	CathodeContext cathodeContext =
+	{
+		.arena = arena_create("CRT", MEGABYTES(10), 0, NULL)
+	};
+
+	if(cathodeContext.arena == NULL)
 	{
 		result = EXIT_CODE_ARENA_CREATE_FAIL;
 	}
 	else
 	{
-		int argc = 0;
-		str8_const* argv = str8_extract_arg_vector(arena, os_get_command_line_args_str8(), &argc);
-		result = cth_main(arena, argc, argv);
+		g_crt = &cathodeContext;
 
-		arena_destroy(arena);
+		int argc = 0;
+		str8_const* argv = str8_extract_arg_vector(cathodeContext.arena, os_get_command_line_args_str8(), &argc);
+		result = cth_main(cathodeContext.arena, argc, argv);
+
+		g_crt = NULL;
+		arena_destroy(cathodeContext.arena);
 	}
 
-	os_crt_shutdown();
-	crt_shutdown();
+	_os_crt_shutdown();
+	_cathode_private_shutdown(&cathodePrivate);
 
 	os_exit_process(result);
 }

@@ -9,11 +9,11 @@ void log_printf(eLogErrorLevel errorLevel, const char* format, ...)
 
 void log_printf_dbg(eLogErrorLevel errorLevel, const char* file, u32 line, const char* format, ...)
 {
-	ASSERT_RAW(g_crt.initialised);
+	ASSERT_RAW(g_cp != NULL);
 
 	// Entering a critical section multiple times on the same thread is fine, but we must make sure
 	// to leave the critical section the same number of times we entered it.
-	os_critsec_enter(&g_crt.logCritSec);
+	os_critsec_enter(&g_cp->logCritSec);
 
 	log_printf(errorLevel, "[%u] %s(%d): ", os_thread_get_ID(), file, line);
 
@@ -22,7 +22,7 @@ void log_printf_dbg(eLogErrorLevel errorLevel, const char* file, u32 line, const
 	log_printfv(errorLevel, format, args);
 	va_end(args);
 
-	os_critsec_leave(&g_crt.logCritSec);
+	os_critsec_leave(&g_cp->logCritSec);
 }
 
 typedef struct _LogPrintfInfo
@@ -54,15 +54,15 @@ internal_func char* _log_printf_callback(const char* buf, void* user, int len)
 
 void log_printfv(eLogErrorLevel errorLevel, const char* format, va_list args)
 {
-	ASSERT_RAW(g_crt.initialised);
+	ASSERT_RAW(g_cp != NULL);
 
 	_LogPrintfInfo info =
 	{
 		.errorLevel = errorLevel
 	};
 
-	os_critsec_enter(&g_crt.logCritSec);
+	os_critsec_enter(&g_cp->logCritSec);
 	stbsp_vsprintfcb(_log_printf_callback, (void*)&info, info.buffer, format, args);
-	os_critsec_leave(&g_crt.logCritSec);
+	os_critsec_leave(&g_cp->logCritSec);
 }
 

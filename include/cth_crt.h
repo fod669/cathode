@@ -5,6 +5,13 @@
 
 typedef struct Arena					Arena;
 
+typedef struct CathodeContext
+{
+	Arena*								arena;
+} CathodeContext;
+
+extern CathodeContext* g_crt;
+
 typedef int8_t							s8;
 typedef int16_t							s16;
 typedef int32_t							s32;

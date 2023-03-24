@@ -17,8 +17,9 @@
 // Third party libs used by cathode go here.
 #include "third_party/stb/stb_sprintf.h"
 
-// All other cathode lib includes go here.
-#include "include/cth.h"
+// Make sure cth_crt.h is before any other cth_* includes (apart from cth_defines.h).
+#include "include/cth_crt.h"
+
 #include "include/cth_assert.h"
 #include "include/cth_log.h"
 #include "include/cth_string.h"
