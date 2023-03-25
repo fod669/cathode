@@ -3,8 +3,6 @@
 #ifndef CTH_OS_H_
 #define CTH_OS_H_
 
-typedef struct CritSec CritSec;
-
 typedef enum eConsoleTextColour
 {
 	CTC_GREEN,
@@ -21,10 +19,10 @@ NORETURN void		os_exit_process(int result);
 u8*					os_thread_get_TIB(void);		// Thread Information Block
 u32					os_thread_get_ID(void);
 
-void				os_critsec_init(CritSec* cs);
-void				os_critsec_delete(CritSec* cs);
-void				os_critsec_enter(CritSec* cs);
-void				os_critsec_leave(CritSec* cs);
+void				os_critsec_init(CriticalSection* cs);
+void				os_critsec_delete(CriticalSection* cs);
+void				os_critsec_enter(CriticalSection* cs);
+void				os_critsec_leave(CriticalSection* cs);
 
 void				os_output_debug_string(const char* buf);
 

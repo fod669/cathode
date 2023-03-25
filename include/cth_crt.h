@@ -4,13 +4,14 @@
 #define CTH_H_
 
 typedef struct Arena					Arena;
+typedef struct CriticalSection			CriticalSection;
 
 typedef struct CathodeContext
 {
 	Arena*								arena;
 } CathodeContext;
 
-extern CathodeContext* g_crt;
+extern CathodeContext*					g_crt;
 
 typedef int8_t							s8;
 typedef int16_t							s16;

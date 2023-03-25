@@ -9,7 +9,7 @@ typedef struct OSContext
 
 internal_var OSContext g_OS;
 
-internal_func void _os_crt_init(void)
+internal_func void _os_init(void)
 {
 	SYSTEM_INFO sysInfo;
 	GetSystemInfo(&sysInfo);
@@ -29,7 +29,7 @@ internal_func void _os_crt_init(void)
 	ASSERT(IS_POWER_OF_TWO(g_OS.baseAddressAllocationGranularity));
 }
 
-internal_func void _os_crt_shutdown(void)
+internal_func void _os_shutdown(void)
 {
 
 }

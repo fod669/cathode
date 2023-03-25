@@ -1,8 +1,8 @@
 
-typedef struct CritSec
+typedef struct CriticalSection
 {
 	CRITICAL_SECTION data;
-} CritSec;
+} CriticalSection;
 
 inline u8* os_thread_get_TIB(void)
 {
@@ -23,25 +23,25 @@ inline u32 os_thread_get_ID(void)
 	return threadID;
 }
 
-inline void os_critsec_init(CritSec* cs)
+inline void os_critsec_init(CriticalSection* cs)
 {
 	ASSERT(cs != NULL);
 	InitializeCriticalSection(&cs->data);
 }
 
-inline void os_critsec_delete(CritSec* cs)
+inline void os_critsec_delete(CriticalSection* cs)
 {
 	ASSERT(cs != NULL);
 	DeleteCriticalSection(&cs->data);
 }
 
-inline void os_critsec_enter(CritSec* cs)
+inline void os_critsec_enter(CriticalSection* cs)
 {
 	ASSERT(cs != NULL);
 	EnterCriticalSection(&cs->data);
 }
 
-inline void os_critsec_leave(CritSec* cs)
+inline void os_critsec_leave(CriticalSection* cs)
 {
 	ASSERT(cs != NULL);
 	LeaveCriticalSection(&cs->data);

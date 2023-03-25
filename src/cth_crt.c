@@ -3,8 +3,9 @@ CathodeContext* g_crt;
 
 typedef struct _CathodePrivate
 {
-	CritSec			logCritSec;
+	CriticalSection			logCritSec;
 } _CathodePrivate;
+
 internal_var _CathodePrivate* g_cp;
 
 internal_func void _cathode_private_init(_CathodePrivate* cp)
@@ -22,8 +23,8 @@ internal_func void _cathode_private_shutdown(_CathodePrivate* cp)
 	os_critsec_delete(&cp->logCritSec);
 }
 
-internal_func void _os_crt_init(void);
-internal_func void _os_crt_shutdown(void);
+internal_func void _os_init(void);
+internal_func void _os_shutdown(void);
 
 // User entry point.
 int cth_main(Arena* arena, int argc, str8_const argv[]);
@@ -36,7 +37,9 @@ NORETURN void STDCALL crt_entry(void)
 
 	_CathodePrivate cathodePrivate = {0};
 	_cathode_private_init(&cathodePrivate);
-	_os_crt_init();
+	_os_init();
+
+	// TODO: Need an init/shutdown function for CathodeContext
 
 	CathodeContext cathodeContext =
 	{
@@ -59,7 +62,7 @@ NORETURN void STDCALL crt_entry(void)
 		arena_destroy(cathodeContext.arena);
 	}
 
-	_os_crt_shutdown();
+	_os_shutdown();
 	_cathode_private_shutdown(&cathodePrivate);
 
 	os_exit_process(result);
