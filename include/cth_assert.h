@@ -28,7 +28,7 @@ Proper ASSERT() usage:
 #define STATIC_ASSERT_MSG(_Exp, _Msg)	_Static_assert(_Exp, _Msg)
 #define STATIC_ASSERT(_Exp)				STATIC_ASSERT_MSG(_Exp, #_Exp)
 
-// TODO: Make the _msg temporary.
+// TODO: Access g_crt via a function like crt()
 // TODO: Have some sort of option to not show message boxes (if a console app only).
 
 #if CTH_ENABLE_ASSERTS
@@ -37,6 +37,7 @@ Proper ASSERT() usage:
 		{																																							\
 			if (!(_Exp))																																			\
 			{																																						\
+				u8* _arenaPos = arena_get_pos(g_crt->arena);																										\
 				log_critical("Assert failed!\n[%u] %s(%d): \"%s\"\n\n", os_thread_get_ID(), __FILE__, __LINE__, #_Exp);												\
 				str8 _msg = str8_printf(g_crt->arena, "File: %s - line: %d\nThread ID: %u\n\nExpression: \"%s\"", __FILE__, __LINE__, os_thread_get_ID(), #_Exp);	\
 				switch (os_message_box("Assert failed!", _msg.str, "Abort", "Debug", "Continue", DMBB_TWO))															\
@@ -45,6 +46,7 @@ Proper ASSERT() usage:
 					case 1: DEBUG_BREAK(); break;																													\
 					default: break;																																	\
 				}																																					\
+				arena_pop_to(g_crt->arena, _arenaPos, false);																										\
 			}																																						\
 		}																																							\
 		while (0)
@@ -69,9 +71,11 @@ Proper ASSERT() usage:
 #define ERROR_FATAL(_Format, ...)																											\
 	do																																		\
 	{																																		\
+		u8* _arenaPos = arena_get_pos(g_crt->arena);																						\
 		str8 _msg = str8_printf(g_crt->arena, "Fatal error in function: %s\n\nError message:\n\"" _Format "\"", __func__, ##__VA_ARGS__);	\
 		log_critical("%P\n\n", _msg);																										\
 		os_message_box("Fatal error!", _msg.str, "Abort", NULL, NULL, DMBB_ONE);															\
+		arena_pop_to(g_crt->arena, _arenaPos, false);																						\
 		FAST_FAIL(EXIT_CODE_ERROR_FATAL);																									\
 	}																																		\
 	while (0)
