@@ -61,14 +61,16 @@ Proper ASSERT() usage:
 	#define ASSERT_RAW			ASSERT
 #endif
 
-// TODO: Write an error popup function.
-#define ERROR_FATAL(_Format, ...)									\
-	do																\
-	{																\
-		log_critical("Fatal error in function: %s\n", __func__);	\
-		log_critical(_Format, ##__VA_ARGS__);						\
-		FAST_FAIL(EXIT_CODE_ERROR_FATAL);							\
-	}																\
+// TODO: Make the _msg temporary.
+// TODO: Have some sort of option to not show message boxes (if a console app only).
+#define ERROR_FATAL(_Format, ...)																											\
+	do																																		\
+	{																																		\
+		str8 _msg = str8_printf(g_crt->arena, "Fatal error in function: %s\n\nError message:\n\"" _Format "\"", __func__, ##__VA_ARGS__);	\
+		log_critical("%P", _msg);																											\
+		os_message_box("Fatal error!", _msg.str, "Abort", NULL, NULL, DMBB_ONE);															\
+		FAST_FAIL(EXIT_CODE_ERROR_FATAL);																									\
+	}																																		\
 	while (0)
 
 #endif // CTH_ASSERT_H_
