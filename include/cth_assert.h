@@ -46,7 +46,16 @@ Proper ASSERT() usage:
 		while (0)
 
 	// An assert with no error message or anything. Use this in cases where the log might not even have been initialised yet.
-	#define ASSERT_RAW(_Exp)	do { if (!(_Exp)) { DEBUG_BREAK(); } } while (0)
+	#define ASSERT_RAW(_Exp)										\
+		do															\
+		{															\
+			if (!(_Exp))											\
+			{														\
+				os_output_debug_string("Assert failed!\n");			\
+				os_output_debug_string(#_Exp);						\
+				DEBUG_BREAK();										\
+			}														\
+		} while (0)
 #else
 	#define ASSERT(_Exp)		do { (void)0; } while (0)
 	#define ASSERT_RAW			ASSERT

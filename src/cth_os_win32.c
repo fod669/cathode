@@ -1,37 +1,32 @@
 
-typedef struct OSContext
+internal_func int _os_init(_OSContext* os)
 {
-	size_t		pageSize;
-	void*		lowestAccessibleAddress;
-	void*		highestAccessibleAddress;
-	size_t		baseAddressAllocationGranularity;
-} OSContext;
+	ASSERT_RAW(os != NULL);
 
-internal_var OSContext g_OS;
-
-internal_func void _os_init(void)
-{
 	SYSTEM_INFO sysInfo;
 	GetSystemInfo(&sysInfo);
 
 	//WORD 		sysInfo.wProcessorArchitecture;
-	g_OS.pageSize							= (size_t)sysInfo.dwPageSize;
-	g_OS.lowestAccessibleAddress			= sysInfo.lpMinimumApplicationAddress;
-	g_OS.highestAccessibleAddress			= sysInfo.lpMaximumApplicationAddress;
+	os->pageSize							= (size_t)sysInfo.dwPageSize;
+	os->lowestAccessibleAddress			= sysInfo.lpMinimumApplicationAddress;
+	os->highestAccessibleAddress			= sysInfo.lpMaximumApplicationAddress;
 	//DWORD_PTR	sysInfo.dwActiveProcessorMask;
 	//DWORD		sysInfo.dwNumberOfProcessors;
 	//DWORD		sysInfo.dwProcessorType;
-	g_OS.baseAddressAllocationGranularity	= (size_t)sysInfo.dwAllocationGranularity;
+	os->baseAddressAllocationGranularity	= (size_t)sysInfo.dwAllocationGranularity;
 	//WORD		sysInfo.wProcessorLevel;
 	//WORD		sysInfo.wProcessorRevision;
 
-	ASSERT(IS_POWER_OF_TWO(g_OS.pageSize));
-	ASSERT(IS_POWER_OF_TWO(g_OS.baseAddressAllocationGranularity));
+	ASSERT(IS_POWER_OF_TWO(os->pageSize));
+	ASSERT(IS_POWER_OF_TWO(os->baseAddressAllocationGranularity));
+
+	return 0;
 }
 
-internal_func void _os_shutdown(void)
+internal_func void _os_shutdown(_OSContext* os)
 {
-
+	ASSERT_RAW(os != NULL);
+	ASSERT_RAW(g_OS == NULL);
 }
 
 str8_const os_get_command_line_args_str8(void)
@@ -119,12 +114,14 @@ void os_log_last_error(void)
 
 size_t os_mem_get_page_size(void)
 {
-	return g_OS.pageSize;
+	ASSERT(g_OS != NULL);
+	return g_OS->pageSize;
 }
 
 size_t os_mem_get_base_granularity(void)
 {
-	return g_OS.baseAddressAllocationGranularity;
+	ASSERT(g_OS != NULL);
+	return g_OS->baseAddressAllocationGranularity;
 }
 
 // Reserves a region of pages in the virtual address space of the calling process.

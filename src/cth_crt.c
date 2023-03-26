@@ -1,30 +1,50 @@
 
-CathodeContext* g_crt;
-
 typedef struct _CathodePrivate
 {
 	CriticalSection			logCritSec;
 } _CathodePrivate;
 
-internal_var _CathodePrivate* g_cp;
+CathodeContext*					g_crt;
+internal_var _CathodePrivate*	g_cp;
+internal_var _OSContext*		g_OS;
 
-internal_func void _cathode_private_init(_CathodePrivate* cp)
+internal_func int _cathode_private_init(_CathodePrivate* cp)
 {
 	ASSERT_RAW(cp != NULL);
-	g_cp = NULL;
 	os_critsec_init(&cp->logCritSec);
-	g_cp = cp;
+	return 0;
 }
 
 internal_func void _cathode_private_shutdown(_CathodePrivate* cp)
 {
 	ASSERT_RAW(cp != NULL);
-	g_cp = NULL;
+	ASSERT_RAW(g_cp == NULL);
 	os_critsec_delete(&cp->logCritSec);
 }
 
-internal_func void _os_init(void);
-internal_func void _os_shutdown(void);
+internal_func int _os_init(_OSContext *os);
+internal_func void _os_shutdown(_OSContext *os);
+
+internal_func int _cathode_context_init(CathodeContext* cc)
+{
+	ASSERT_RAW(cc != NULL);
+	int result = 0;
+
+	cc->arena = arena_create("CRT", MEGABYTES(10), 0, NULL);
+	if(cc->arena == NULL)
+	{
+		result = EXIT_CODE_ARENA_CREATE_FAIL;
+	}
+
+	return result;
+}
+
+internal_func void _cathode_context_shutdown(CathodeContext* cc)
+{
+	ASSERT_RAW(cc != NULL);
+	ASSERT_RAW(g_crt == NULL);
+	arena_destroy(cc->arena);
+}
 
 // User entry point.
 int cth_main(Arena* arena, int argc, str8_const argv[]);
@@ -34,36 +54,41 @@ NORETURN void STDCALL crt_entry(void)
 	int result = EXIT_SUCCESS;
 
 	g_crt = NULL;
+	g_cp = NULL;
+	g_OS = NULL;
 
 	_CathodePrivate cathodePrivate = {0};
-	_cathode_private_init(&cathodePrivate);
-	_os_init();
+	result = _cathode_private_init(&cathodePrivate);
+	if (result != 0) { goto cathode_private_init_fail; }
+	g_cp = &cathodePrivate;
 
-	// TODO: Need an init/shutdown function for CathodeContext
+	_OSContext osContext = {0};
+	result = _os_init(&osContext);
+	if (result != 0) { goto os_init_fail; }
+	g_OS = &osContext;
 
-	CathodeContext cathodeContext =
-	{
-		.arena = arena_create("CRT", MEGABYTES(10), 0, NULL)
-	};
+	CathodeContext cathodeContext = {0};
+	result = _cathode_context_init(&cathodeContext);
+	if (result != 0) { goto cathode_context_init_fail; }
+	g_crt = &cathodeContext;
 
-	if(cathodeContext.arena == NULL)
-	{
-		result = EXIT_CODE_ARENA_CREATE_FAIL;
-	}
-	else
-	{
-		g_crt = &cathodeContext;
+	int argc = 0;
+	str8_const* argv = str8_extract_arg_vector(cathodeContext.arena, os_get_command_line_args_str8(), &argc);
+	result = cth_main(cathodeContext.arena, argc, argv);
 
-		int argc = 0;
-		str8_const* argv = str8_extract_arg_vector(cathodeContext.arena, os_get_command_line_args_str8(), &argc);
-		result = cth_main(cathodeContext.arena, argc, argv);
+	g_crt = NULL;
+	_cathode_context_shutdown(&cathodeContext);
+	cathode_context_init_fail:
 
-		g_crt = NULL;
-		arena_destroy(cathodeContext.arena);
-	}
+	os_exit_process(result);
 
-	_os_shutdown();
+	g_OS = NULL;
+	_os_shutdown(&osContext);
+	os_init_fail:
+
+	g_cp = NULL;
 	_cathode_private_shutdown(&cathodePrivate);
+	cathode_private_init_fail:
 
 	os_exit_process(result);
 }

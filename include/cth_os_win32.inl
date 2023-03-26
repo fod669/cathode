@@ -4,6 +4,14 @@ typedef struct CriticalSection
 	CRITICAL_SECTION data;
 } CriticalSection;
 
+typedef struct _OSContext
+{
+	size_t		pageSize;
+	void*		lowestAccessibleAddress;
+	void*		highestAccessibleAddress;
+	size_t		baseAddressAllocationGranularity;
+} _OSContext;
+
 inline u8* os_thread_get_TIB(void)
 {
 	#if CTH_ARCH_32_BIT
