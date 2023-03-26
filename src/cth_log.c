@@ -33,13 +33,15 @@ typedef struct _LogPrintfInfo
 
 internal_func char* _log_printf_callback(const char* buf, void* user, int len)
 {
-	eConsoleTextColour textColours[LOG_LEVEL_COUNT] =
+	eConsoleTextColour textColours[] =
 	{
-		CTC_GREEN,
-		CTC_YELLOW,
-		CTC_RED,
-		CTC_RED_BACKGROUND
+		CTC_GREEN,				// LOG_SUCCESS
+		CTC_GREY,				// LOG_INFO
+		CTC_YELLOW,				// LOG_WARNING
+		CTC_RED,				// LOG_ERROR
+		CTC_RED_BACKGROUND		// LOG_CRITICAL
 	};
+	STATIC_ASSERT(countof(textColours) == LOG_LEVEL_COUNT);
 
 	_LogPrintfInfo* info = (_LogPrintfInfo*)user;
 	ASSERT(info->errorLevel >= 0 && info->errorLevel < LOG_LEVEL_COUNT);
