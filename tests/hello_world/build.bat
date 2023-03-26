@@ -25,7 +25,7 @@ set bin_dir=%proj_dir%\bin\%config%
 :: Common compiler settings:
 :: ============================================================================
 set everything_test=-Weverything -Wno-missing-prototypes
-set common_flags=-Werror -Wall -Wextra -Wpedantic -lOneCore.lib -I%cathode_dir%
+set common_flags=-Werror -Wall -Wextra -Wpedantic -lOneCore.lib -DCTH_UI=1 -I%cathode_dir%
 set enabled_warnings=-Wshadow -Wvla -Wstrict-prototypes
 set disabled_warnings=-Wno-unused-parameter -Wno-gnu-zero-variadic-macro-arguments -Wno-format-invalid-specifier -Wno-language-extension-token
 

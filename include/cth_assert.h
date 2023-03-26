@@ -28,8 +28,6 @@ Proper ASSERT() usage:
 #define STATIC_ASSERT_MSG(_Exp, _Msg)	_Static_assert(_Exp, _Msg)
 #define STATIC_ASSERT(_Exp)				STATIC_ASSERT_MSG(_Exp, #_Exp)
 
-// TODO: Have some sort of option to not show message boxes (if a console app only).
-
 #if CTH_ENABLE_ASSERTS
 	#define ASSERT(_Exp)																																				\
 		do																																								\

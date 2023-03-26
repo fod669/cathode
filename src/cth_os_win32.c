@@ -195,6 +195,8 @@ bool os_mem_release(void* address)
 	return result;
 }
 
+#if CTH_UI
+
 typedef struct MessageBoxProcInfo
 {
 	HHOOK			msgBoxHook;
@@ -300,4 +302,14 @@ int os_message_box(const char* title, const char* msg, const char* buttonText1, 
 
 	return buttonPressed;
 }
+
+#else // CTH_UI
+
+int os_message_box(const char* title, const char* msg, const char* buttonText1, const char* buttonText2, const char* buttonText3, eDefaultMessageBoxButton defaultButton)
+{
+	// TODO: Get user input from the command line.
+	return 0;
+}
+
+#endif // CTH_UI
 

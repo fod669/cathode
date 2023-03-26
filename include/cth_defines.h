@@ -19,6 +19,9 @@ Exactly one of these must be set as a compiler option: eg -DCTH_DEBUG=1
 Console app. Set as a compiler option. Defaults to 0 if not set.
 - CTH_CONSOLE					0 or 1
 
+The app should show UI elements. Set as a compiler option. Defaults to 1 if not set.
+- CTH_UI						0 or 1
+
 Compiler. One is set to 1, the rest are 0 (auto detected).
 - CTH_COMPILER_CLANG			0 or 1
 - CTH_COMPILER_GCC				0 or 1
@@ -78,6 +81,10 @@ Can be overridden by setting it as a compiler option: eg -DCTH_LOG_LINE_INFO=1
 
 #if !defined(CTH_CONSOLE)
 	#define CTH_CONSOLE 0
+#endif
+
+#if !defined(CTH_UI)
+	#define CTH_UI 1
 #endif
 
 // Compiler detection:
