@@ -1,7 +1,7 @@
 
 internal_func int _os_init(_OSContext* os)
 {
-	ASSERT_RAW(os != NULL);
+	ASSERT(os != NULL);
 
 	SYSTEM_INFO sysInfo;
 	GetSystemInfo(&sysInfo);
@@ -25,8 +25,8 @@ internal_func int _os_init(_OSContext* os)
 
 internal_func void _os_shutdown(_OSContext* os)
 {
-	ASSERT_RAW(os != NULL);
-	ASSERT_RAW(g_OS == NULL);
+	ASSERT(os != NULL);
+	ASSERT(g_OS == NULL);
 }
 
 str8_const os_get_command_line_args_str8(void)
@@ -208,7 +208,7 @@ internal_var MessageBoxProcInfo* g_messageBoxProcInfo;
 
 internal_func LRESULT CALLBACK CBTProc(int nCode, WPARAM wParam, LPARAM lParam)
 {
-	ASSERT_RAW(g_messageBoxProcInfo != NULL);
+	ASSERT(g_messageBoxProcInfo != NULL);
 	if (nCode == HCBT_ACTIVATE)
 	{
 		UnhookWindowsHookEx(g_messageBoxProcInfo->msgBoxHook);
@@ -238,16 +238,16 @@ internal_func LRESULT CALLBACK CBTProc(int nCode, WPARAM wParam, LPARAM lParam)
 
 int os_message_box(const char* title, const char* msg, const char* buttonText1, const char* buttonText2, const char* buttonText3, eDefaultMessageBoxButton defaultButton)
 {
-	ASSERT_RAW(title != NULL);
-	ASSERT_RAW(msg != NULL);
-	ASSERT_RAW(buttonText1 != NULL);
+	ASSERT(title != NULL);
+	ASSERT(msg != NULL);
+	ASSERT(buttonText1 != NULL);
 
 	UINT type;
 	int buttonCount;
 
 	if (buttonText3 != NULL)
 	{
-		ASSERT_RAW(buttonText2 != NULL);
+		ASSERT(buttonText2 != NULL);
 		type = MB_YESNOCANCEL;
 		buttonCount = 3;
 	}

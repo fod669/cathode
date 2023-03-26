@@ -9,7 +9,7 @@ void log_printf(eLogErrorLevel errorLevel, const char* format, ...)
 
 void log_printf_dbg(eLogErrorLevel errorLevel, const char* file, u32 line, const char* format, ...)
 {
-	ASSERT_RAW(g_cp != NULL);
+	ASSERT(g_cp != NULL);
 
 	// Entering a critical section multiple times on the same thread is fine, but we must make sure
 	// to leave the critical section the same number of times we entered it.
@@ -54,7 +54,7 @@ internal_func char* _log_printf_callback(const char* buf, void* user, int len)
 
 void log_printfv(eLogErrorLevel errorLevel, const char* format, va_list args)
 {
-	ASSERT_RAW(g_cp != NULL);
+	ASSERT(g_cp != NULL);
 
 	_LogPrintfInfo info =
 	{

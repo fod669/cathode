@@ -10,15 +10,15 @@ internal_var _OSContext*		g_OS;
 
 internal_func int _cathode_private_init(_CathodePrivate* cp)
 {
-	ASSERT_RAW(cp != NULL);
+	ASSERT(cp != NULL);
 	os_critsec_init(&cp->logCritSec);
 	return 0;
 }
 
 internal_func void _cathode_private_shutdown(_CathodePrivate* cp)
 {
-	ASSERT_RAW(cp != NULL);
-	ASSERT_RAW(g_cp == NULL);
+	ASSERT(cp != NULL);
+	ASSERT(g_cp == NULL);
 	os_critsec_delete(&cp->logCritSec);
 }
 
@@ -27,7 +27,7 @@ internal_func void _os_shutdown(_OSContext *os);
 
 internal_func int _cathode_context_init(CathodeContext* cc)
 {
-	ASSERT_RAW(cc != NULL);
+	ASSERT(cc != NULL);
 	int result = 0;
 
 	cc->arena = arena_create("CRT", MEGABYTES(10), 0, NULL);
@@ -41,8 +41,8 @@ internal_func int _cathode_context_init(CathodeContext* cc)
 
 internal_func void _cathode_context_shutdown(CathodeContext* cc)
 {
-	ASSERT_RAW(cc != NULL);
-	ASSERT_RAW(g_crt == NULL);
+	ASSERT(cc != NULL);
+	ASSERT(g_crt == NULL);
 	arena_destroy(cc->arena);
 }
 
