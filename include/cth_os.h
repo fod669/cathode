@@ -38,6 +38,7 @@ void				os_critsec_delete(CriticalSection* cs);
 void				os_critsec_enter(CriticalSection* cs);
 void				os_critsec_leave(CriticalSection* cs);
 
+// NOTE: Ensure that this function does not call ASSERT, because ASSERT uses this function to output error strings.
 void				os_output_debug_string(const char* buf);
 
 void				os_console_write(const char* buf, int length, eConsoleTextColour colour);

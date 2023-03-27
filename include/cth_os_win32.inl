@@ -57,6 +57,7 @@ inline void os_critsec_leave(CriticalSection* cs)
 
 inline void os_output_debug_string(const char* buf)
 {
+	// NOTE: Do not call ASSERT in this function.
 	OutputDebugStringA(buf);
 }
 
