@@ -31,7 +31,7 @@ set cth_dir=%~dp0%..
 set everything_test=-Weverything -Wno-missing-prototypes
 set common_flags=-fuse-ld=lld-link -Werror -Wall -Wextra -Wpedantic -lOneCore.lib %cth_dir%\src\cathode.c -I%cth_dir%
 set enabled_warnings=-Wshadow -Wvla -Wstrict-prototypes
-set disabled_warnings=-Wno-unused-parameter -Wno-gnu-zero-variadic-macro-arguments -Wno-format-invalid-specifier -Wno-language-extension-token
+set disabled_warnings=-Wno-unused-parameter -Wno-gnu-zero-variadic-macro-arguments -Wno-format-invalid-specifier -Wno-language-extension-token -Wno-gnu-line-marker
 
 :: CRT settings:
 :: ============================================================================
@@ -46,9 +46,9 @@ exit /b 0
 
 :bad_config
 echo Invalid config: '%config%' (Use: debug, release, dist)
-exit /b 2
+exit /b 1
 
 :bad_subsystem
 echo Invalid subsystem option: '%subsystem%' (Use: console, windows, hybrid)
-exit /b 3
+exit /b 2
 
