@@ -232,18 +232,18 @@ bool os_mem_release(void* address)
 
 #if CTH_UI
 
-typedef struct MessageBoxProcInfo
+typedef struct _MessageBoxProcInfo
 {
 	HHOOK			msgBoxHook;
 	const char*		buttonText1;
 	const char*		buttonText2;
 	const char*		buttonText3;
 	int				buttonCount;
-} MessageBoxProcInfo;
+} _MessageBoxProcInfo;
 
-internal_var MessageBoxProcInfo* g_messageBoxProcInfo;
+internal_var _MessageBoxProcInfo* g_messageBoxProcInfo;
 
-internal_func LRESULT CALLBACK CBTProc(int nCode, WPARAM wParam, LPARAM lParam)
+internal_func LRESULT CALLBACK _message_box_cbt_proc(int nCode, WPARAM wParam, LPARAM lParam)
 {
 	ASSERT(g_messageBoxProcInfo != NULL);
 	if (nCode == HCBT_ACTIVATE)
@@ -313,9 +313,9 @@ int os_message_box(const char* title, const char* msg, const char* buttonText1, 
 		case DMBB_THREE:	type |= MB_DEFBUTTON3;	break;
 	}
 
-	MessageBoxProcInfo mbpi =
+	_MessageBoxProcInfo mbpi =
 	{
-		.msgBoxHook = SetWindowsHookEx(WH_CBT, CBTProc, NULL, os_thread_get_ID()),
+		.msgBoxHook = SetWindowsHookEx(WH_CBT, _message_box_cbt_proc, NULL, os_thread_get_ID()),
 		.buttonText1 = buttonText1,
 		.buttonText2 = buttonText2,
 		.buttonText3 = buttonText3,

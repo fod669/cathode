@@ -59,7 +59,7 @@ Coding standards:
 - Zero is initialisation everywhere.
 
 Tools:
-- Create a batch script that contains all the compiler settings necessary to build a cathode project (removing the CRT etc).
++ Create a batch script that contains all the compiler settings necessary to build a cathode project (removing the CRT etc).
 - Document what the enabled and disabled warnings do.
 - Deterministic builds.
 - Set initial CRT memory arena size using a #define.
