@@ -30,7 +30,7 @@ internal_func int _cathode_context_init(CathodeContext* cc)
 	ASSERT(cc != NULL);
 	int result = 0;
 
-	cc->arena = arena_create("CRT", MEGABYTES(10), 0, NULL);
+	cc->arena = arena_create("CRT", CTH_ARENA_MEM_RESERVE, 0, NULL);
 	if(cc->arena == NULL)
 	{
 		result = EXIT_CODE_ARENA_CREATE_FAIL;

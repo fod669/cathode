@@ -60,6 +60,10 @@ Defaults to 1 in debug builds, otherwise it's 0.
 Can be overridden by setting it as a compiler option: eg -DCTH_LOG_LINE_INFO=1
 - CTH_LOG_LINE_INFO				0 or 1
 
+Initial CRT memory reserve amount.
+This is the amount of memory the CRT reserves for its Arena. Defaults to 10Mb.
+- CTH_ARENA_MEM_RESERVE			10485760
+
 */
 
 // Build type, and console app:
@@ -196,6 +200,12 @@ Can be overridden by setting it as a compiler option: eg -DCTH_LOG_LINE_INFO=1
 	#else
 		#define CTH_LOG_LINE_INFO 0
 	#endif
+#endif
+
+// Arena memory reserve:
+// ============================================================================
+#if !defined(CTH_ARENA_MEM_RESERVE)
+	#define CTH_ARENA_MEM_RESERVE 10485760
 #endif
 
 #endif // CTH_DEFINES_H_

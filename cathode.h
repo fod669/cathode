@@ -62,7 +62,7 @@ Tools:
 + Create a batch script that contains all the compiler settings necessary to build a cathode project (removing the CRT etc).
 - Document what the enabled and disabled warnings do.
 - Deterministic builds - partially done.
-- Set initial CRT memory arena size using a #define.
++ Set initial CRT memory arena size using a #define.
 - Look into valgrind/windbg/dr.memory to find memory bugs.
 + Look into clang-tidy for static analysis.
 - Maybe look into clang-format?

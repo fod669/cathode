@@ -27,6 +27,7 @@ set sub_hybrid=--for-linker=-subsystem:console -DCTH_CONSOLE=1 -DCTH_UI=1
 
 :: Common compiler settings:
 :: ============================================================================
+:: Use this to change the CRT arena memory reserve amount: -DCTH_ARENA_MEM_RESERVE=1024
 set cth_dir=%~dp0%..
 set everything_test=-Weverything -Wno-missing-prototypes
 set common_flags=-fuse-ld=lld-link -Werror -Wall -Wextra -Wpedantic -lOneCore.lib %cth_dir%\src\cathode.c -I%cth_dir%
