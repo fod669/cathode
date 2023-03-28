@@ -39,8 +39,13 @@ set stack_size=1048576
 set stack_options=-mstack-probe-size=%stack_size% --for-linker=-stack:%stack_size%,%stack_size%
 set crt_flags=-nostdlib -lkernel32 -D_VC_NODEFAULTLIB %stack_options% --for-linker=-entry:crt_entry
 
+:: Deterministic build settings:
+:: ============================================================================
+:: https://blog.llvm.org/2019/11/deterministic-builds-with-clang-and-lld.html
+set deterministic_flags=-Wdate-time -Brepro --for-linker=-Brepro
+
 setlocal EnableDelayedExpansion
-set cathode_settings=!build_%config%! !sub_%subsystem%! %common_flags% %enabled_warnings% %disabled_warnings% %crt_flags%
+set cathode_settings=!build_%config%! !sub_%subsystem%! %common_flags% %enabled_warnings% %disabled_warnings% %crt_flags% %deterministic_flags%
 endlocal & set cathode_settings=%cathode_settings%
 exit /b 0
 

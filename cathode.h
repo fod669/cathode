@@ -61,10 +61,10 @@ Coding standards:
 Tools:
 + Create a batch script that contains all the compiler settings necessary to build a cathode project (removing the CRT etc).
 - Document what the enabled and disabled warnings do.
-- Deterministic builds.
+- Deterministic builds - partially done.
 - Set initial CRT memory arena size using a #define.
 - Look into valgrind to find memory bugs.
-- Look into clang-tidy for static analysis.
++ Look into clang-tidy for static analysis.
 - Maybe look into clang-format?
 - Build script stuff.
 	- debug/release options
