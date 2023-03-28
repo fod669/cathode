@@ -40,6 +40,7 @@ typedef uint64_t						u64;
 #endif
 
 #define countof(_Array)					((sizeof(_Array) / sizeof(0[_Array])) / ((size_t)(!(sizeof(_Array) % sizeof(0[_Array])))))
+#define offsetof(_Type, _Var)			__builtin_offsetof(_Type, _Var)
 
 #define CDECL							__cdecl
 #define STDCALL							__stdcall

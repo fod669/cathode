@@ -26,6 +26,10 @@ typedef struct str8_view
 // The above structs always need to be interchangable.
 STATIC_ASSERT(sizeof(str8) == sizeof(str8_const));
 STATIC_ASSERT(sizeof(str8) == sizeof(str8_view));
+STATIC_ASSERT(offsetof(str8, str) == offsetof(str8_const, str));
+STATIC_ASSERT(offsetof(str8, len) == offsetof(str8_const, len));
+STATIC_ASSERT(offsetof(str8, str) == offsetof(str8_view, str));
+STATIC_ASSERT(offsetof(str8, len) == offsetof(str8_view, len));
 
 #define _S8C(_X)	str8_const_from_cstring(_X)
 

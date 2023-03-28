@@ -63,7 +63,7 @@ Tools:
 - Document what the enabled and disabled warnings do.
 - Deterministic builds - partially done.
 - Set initial CRT memory arena size using a #define.
-- Look into valgrind to find memory bugs.
+- Look into valgrind/windbg/dr.memory to find memory bugs.
 + Look into clang-tidy for static analysis.
 - Maybe look into clang-format?
 - Build script stuff.
@@ -84,7 +84,7 @@ Tech:
 - Think of a way to virtual alloc more memory onto the end of an allocated region so memory can always increase.
 
 Code:
-- Add an offsetof macro.
++ Add an offsetof macro.
 - Add string functions for str8_view.
 - Write tests for all CRT code.
 - Make arena memory allocation thread safe.
