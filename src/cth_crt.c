@@ -47,7 +47,7 @@ internal_func void _cathode_context_shutdown(CathodeContext* cc)
 }
 
 // User entry point.
-int cth_main(Arena* arena, int argc, str8_const argv[]);
+int cth_main(int argc, str8_const argv[]);
 
 NORETURN void STDCALL crt_entry(void)
 {
@@ -74,7 +74,7 @@ NORETURN void STDCALL crt_entry(void)
 
 	int argc = 0;
 	str8_const* argv = str8_extract_arg_vector(cathodeContext.arena, os_get_command_line_args_str8(), &argc);
-	result = cth_main(cathodeContext.arena, argc, argv);
+	result = cth_main(argc, argv);
 
 	g_crt = NULL;
 	_cathode_context_shutdown(&cathodeContext);

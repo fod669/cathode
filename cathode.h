@@ -92,6 +92,7 @@ Code:
 Features:
 - Console input.
 - File IO.
+- File path support for strings.
 - Logging to a file.
 - More extensive string manipulation library.
 - Timers.
