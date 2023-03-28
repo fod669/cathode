@@ -148,10 +148,15 @@ void arena_print(Arena* arena)
 {
 	ASSERT(arena != NULL);
 	log_info("Arena: %p\n", (void*)arena);
-	log_info("  Name:              \"%P\"\n", arena->name);
-	log_info("  Min Block Size:    %zu\n", arena->minBlockSizeBytes);
-	log_info("  Total Bytes:       %tu\n", arena->reserveEnd - arena->reserveBegin);
-	log_info("  Bytes Committed:   %tu\n", arena->commitEnd - arena->reserveBegin);
-	log_info("  Bytes Allocated:   %tu\n", arena->currentPos - arena->reserveBegin);
+	log_info("  Name:                      \"%P\"\n", arena->name);
+	log_info("  Min Block Size:            %zu\n", arena->minBlockSizeBytes);
+
+	log_info("  Pushed Total Bytes:        %zu\n", arena_get_pushed_total(arena));
+
+	log_info("  Committed Total Bytes:     %zu\n", arena_get_committed_total(arena));
+	log_info("  Committed Remaining Bytes: %zu\n", arena_get_committed_remaining(arena));
+
+	log_info("  Reserved Total Bytes:      %zu\n", arena_get_reserved_total(arena));
+	log_info("  Reserved Remaining Bytes:  %zu\n", arena_get_reserved_remaining(arena));
 }
 

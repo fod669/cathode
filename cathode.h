@@ -28,6 +28,7 @@
 
 // Inlines go here.
 #include "include/cth_string.inl"
+#include "include/cth_arena.inl"
 
 #if CTH_OS_WINDOWS
 	#define WIN32_LEAN_AND_MEAN

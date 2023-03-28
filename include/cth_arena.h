@@ -25,14 +25,14 @@ void			arena_destroy(Arena* arena);
 void*			arena_push(Arena* arena, size_t byteCount, size_t byteAlignment);
 void			arena_pop(Arena* arena, size_t byteCount, bool decommit);
 void			arena_pop_to(Arena* arena, u8* pos, bool decommit);
-inline void		arena_reset(Arena* arena, bool decommit)		{ arena_pop_to(arena, arena->userMemoryStartPos, decommit); }
+void			arena_reset(Arena* arena, bool decommit);
 
-inline u8*		arena_get_pos(Arena* arena)						{ return arena->currentPos; }
-inline size_t	arena_get_pushed_total(Arena* arena)			{ return (arena->currentPos - arena->reserveBegin); }
-inline size_t	arena_get_committed_total(Arena* arena)			{ return (arena->commitEnd - arena->reserveBegin); }
-inline size_t	arena_get_committed_remaining(Arena* arena)		{ return (arena->commitEnd - arena->currentPos); }
-inline size_t	arena_get_reserved_total(Arena* arena)			{ return (arena->reserveEnd - arena->reserveBegin); }
-inline size_t	arena_get_reserved_remaining(Arena* arena)		{ return (arena->reserveEnd - arena->currentPos); }
+u8*				arena_get_pos(Arena* arena);
+size_t			arena_get_pushed_total(Arena* arena);
+size_t			arena_get_committed_total(Arena* arena);
+size_t			arena_get_committed_remaining(Arena* arena);
+size_t			arena_get_reserved_total(Arena* arena);
+size_t			arena_get_reserved_remaining(Arena* arena);
 
 void			arena_print(Arena* arena);
 
