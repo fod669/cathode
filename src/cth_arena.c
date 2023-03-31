@@ -91,8 +91,13 @@ void* arena_push(Arena* arena, size_t byteCount, size_t byteAlignment)
 		// If this goes over the reserved end, we're toast.
 		if (newCommitEnd > arena->reserveEnd)
 		{
-			// TODO: For now this just shows an error and quits.
-			// It would be nice if it simply allocated more memory.
+			// NOTE: We could reserve another memory region directly after the currently reserved region.
+			// This would keep the memory contiguous, but then we'd have to set the min block size to the
+			// os allocation granularity. And we'd also have to do some trickery when deallocating. And
+			// it also may not work if the memory region afterwards has already been reserved. I didn't
+			// bother with this because it seems as though you should really just ensure that your reserved
+			// memory region is always large enough anyway. But it should theoretically be possible to
+			// continue pushing memory until you run out of virtual address space by doing this.
 			ERROR_FATAL("Tried to allocate more memory than was reserved!\n");
 		}
 

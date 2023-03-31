@@ -83,6 +83,7 @@ Tech:
 - Look into the interplay between str8 and unicode.
 - Think of a way to have temporary memory pushed onto arenas.
 - Think of a way to virtual alloc more memory onto the end of an allocated region so memory can always increase.
+- Implement the thing that catches page faults and exceptions and stuff.
 
 Code:
 + Add an offsetof macro.
