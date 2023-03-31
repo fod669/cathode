@@ -80,8 +80,6 @@ NORETURN void STDCALL crt_entry(void)
 	_cathode_context_shutdown(&cathodeContext);
 	cathode_context_init_fail:
 
-	os_exit_process(result);
-
 	g_OS = NULL;
 	_os_shutdown(&osContext);
 	os_init_fail:
