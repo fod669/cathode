@@ -65,7 +65,7 @@ str8_const* str8_extract_arg_vector(Arena* arena, str8_const cmdLine, int* out_a
 			if (argEnded)
 			{
 				argEnded = false;
-
+				currentArg->str[currentArg->len] = '\0';
 				str8* newArg = PUSH_TYPE(arena, str8);
 				newArg->str = currentArg->str + currentArg->len + 1;
 
@@ -131,7 +131,7 @@ str8 str8_printfv(Arena* arena, const char* format, va_list args)
 		.str = stringBuffer,
 		.len = info.stringLength
 	};
-	ASSERT(s.str[s.len] == '\0');
+	s.str[s.len] = '\0';
 	return s;
 }
 

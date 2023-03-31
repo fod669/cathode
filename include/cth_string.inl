@@ -28,7 +28,7 @@ inline str8 str8_push(Arena* arena, str8_const s)
 		.str = PUSH_TYPE_ARRAY(arena, char, s.len + 1),
 		.len = s.len
 	};
-	os_mem_cpy(result.str, s.str, s.len);
+	os_mem_cpy(result.str, s.str, s.len + 1);
 	ASSERT(result.str[result.len] == '\0');
 	return result;
 }
@@ -42,7 +42,7 @@ inline str8 str8_push_cstring(Arena* arena, const char* s)
 		.str = PUSH_TYPE_ARRAY(arena, char, len + 1),
 		.len = len
 	};
-	os_mem_cpy(result.str, s, len);
+	os_mem_cpy(result.str, s, len + 1);
 	ASSERT(result.str[result.len] == '\0');
 	return result;
 }

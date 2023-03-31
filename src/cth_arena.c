@@ -147,16 +147,23 @@ void arena_pop_to(Arena* arena, u8* pos, bool decommit)
 void arena_print(Arena* arena)
 {
 	ASSERT(arena != NULL);
+
+	size_t pushedTotal			= arena_get_pushed_total(arena);
+	size_t committedTotal		= arena_get_committed_total(arena);
+	size_t committedRemaining	= arena_get_committed_remaining(arena);
+	size_t reservedTotal		= arena_get_reserved_total(arena);
+	size_t reservedRemaining	= arena_get_reserved_remaining(arena);
+
 	log_info("Arena: %p\n", (void*)arena);
 	log_info("  Name:                      \"%P\"\n", arena->name);
 	log_info("  Min Block Size:            %zu\n", arena->minBlockSizeBytes);
 
-	log_info("  Pushed Total Bytes:        %zu\n", arena_get_pushed_total(arena));
+	log_info("  Pushed Total Bytes:        %zu\n", pushedTotal);
 
-	log_info("  Committed Total Bytes:     %zu\n", arena_get_committed_total(arena));
-	log_info("  Committed Remaining Bytes: %zu\n", arena_get_committed_remaining(arena));
+	log_info("  Committed Total Bytes:     %zu\n", committedTotal);
+	log_info("  Committed Remaining Bytes: %zu\n", committedRemaining);
 
-	log_info("  Reserved Total Bytes:      %zu\n", arena_get_reserved_total(arena));
-	log_info("  Reserved Remaining Bytes:  %zu\n", arena_get_reserved_remaining(arena));
+	log_info("  Reserved Total Bytes:      %zu\n", reservedTotal);
+	log_info("  Reserved Remaining Bytes:  %zu\n", reservedRemaining);
 }
 
