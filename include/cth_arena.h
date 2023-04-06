@@ -3,6 +3,30 @@
 #ifndef CTH_ARENA_H_
 #define CTH_ARENA_H_
 
+#if CTH_DEBUG
+	#define ARENA_THREAD_DEBUG 1
+#else
+	#define ARENA_THREAD_DEBUG 0
+#endif
+
+#if ARENA_THREAD_DEBUG
+	// TODO: Test that this works.
+	#define ARENA_THREAD_CHECK(_Arena)																																	\
+		do																																								\
+		{																																								\
+			if (_Arena->threadId != os_thread_get_ID())																													\
+			{																																							\
+				ERROR_FATAL("Arena function called from a thread that didn't create the arena!\nArena name: %P\nCreation thread Id: %u\nCalling thread Id: %u\n",		\
+					_Arena->name,																																		\
+					_Arena->threadId,																																	\
+					os_thread_get_ID());																																\
+			}																																							\
+		}																																								\
+		while (0)
+#else
+	#define ARENA_THREAD_CHECK(_Arena) do { (void)0; } while (0)
+#endif
+
 typedef struct Arena
 {
 	u8*			reserveBegin;			// Pointer to the beginning of the reserved virtual memory region.
@@ -13,6 +37,11 @@ typedef struct Arena
 										// arena (because the Arena object and name string are pushed to the very beginning of the memory region).
 	size_t		minBlockSizeBytes;		// Memory commits will always be rounded up to this boundary. Will always be a multiple of the OS page size.
 	str8		name;					// The name of the arena. Memory for this string is allocated at the beginning of the arena itself.
+
+#if ARENA_THREAD_DEBUG
+	u32			threadId;				// Arenas are not thread safe. So ensure that every time a function is called on it, it's from the same thread that created it.
+#endif
+
 } Arena;
 
 // Create and destroy arenas.

@@ -38,6 +38,10 @@ Arena* arena_create(const char* name, size_t maxSizeBytes, size_t minBlockSizeBy
 				.userMemoryStartPos		= NULL,
 				.minBlockSizeBytes		= minBlockSizeBytes,
 				.name					= { .str = NULL, .len = 0 },
+				
+				#if ARENA_THREAD_DEBUG
+				.threadId				= os_thread_get_ID(),
+				#endif
 			};
 
 			// Allocate the memory for the Arena using the temp Arena, then copy the temp Arena into the allocated memory.
@@ -66,6 +70,7 @@ Arena* arena_create(const char* name, size_t maxSizeBytes, size_t minBlockSizeBy
 void arena_destroy(Arena* arena)
 {
 	ASSERT(arena != NULL);
+	ARENA_THREAD_CHECK(arena);
 	ASSERT(arena->reserveBegin != NULL);
 
 	// Delete the Arena.
@@ -78,7 +83,9 @@ void arena_destroy(Arena* arena)
 void* arena_push(Arena* arena, size_t byteCount, size_t byteAlignment)
 {
 	ASSERT(arena != NULL);
+	ARENA_THREAD_CHECK(arena);
 	ASSERT(IS_POWER_OF_TWO(byteAlignment));
+
 	u8* mem = (u8*)ALIGN_UP_TO_POW2((size_t)arena->currentPos, byteAlignment);
 	u8* end = mem + byteCount;
 
@@ -117,6 +124,8 @@ void* arena_push(Arena* arena, size_t byteCount, size_t byteAlignment)
 void arena_pop(Arena* arena, size_t byteCount, bool decommit)
 {
 	ASSERT(arena != NULL);
+	ARENA_THREAD_CHECK(arena);
+
 	u8* newPos = arena->currentPos - byteCount;
 	if (newPos < arena->userMemoryStartPos)
 	{
@@ -161,6 +170,10 @@ void arena_print(Arena* arena)
 
 	log_info("Arena: %p\n", (void*)arena);
 	log_info("  Name:                      \"%P\"\n", arena->name);
+	#if ARENA_THREAD_DEBUG
+	log_info("  Thread Id:                 %u\n", arena->threadId);
+	#endif
+
 	log_info("  Min Block Size:            %zu\n", arena->minBlockSizeBytes);
 
 	log_info("  Pushed Total Bytes:        %zu\n", pushedTotal);
