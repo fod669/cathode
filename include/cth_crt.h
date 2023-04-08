@@ -12,6 +12,11 @@ typedef struct CathodeContext
 	Arena*								arena;
 } CathodeContext;
 
+typedef struct ThreadLocalStorage
+{
+	Arena*								arena;
+} ThreadLocalStorage;
+
 // TODO: Make each thread have its own one of these (thread_local)
 extern CathodeContext*					g_crt;
 

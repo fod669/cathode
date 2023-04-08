@@ -44,6 +44,14 @@ inline u32 os_thread_get_ID(void)
 	return threadID;
 }
 
+inline ThreadLocalStorage* os_tls(void)
+{
+	extern _OSContext* g_os;
+	ASSERT(g_os != NULL);
+	ThreadLocalStorage* tls = TlsGetValue(g_os->tlsIndex);
+	return tls;
+}
+
 inline void os_critsec_init(CriticalSection* cs)
 {
 	ASSERT(cs != NULL);

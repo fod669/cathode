@@ -59,6 +59,34 @@ internal_func void _os_shutdown(_OSContext* os)
 	}
 }
 
+internal_func bool _os_tls_create(const char* arenaName, u32 tlsIndex)
+{
+	bool result = true;
+	Arena* arena = arena_create(arenaName, CTH_ARENA_MEM_RESERVE, 0, NULL);
+	if (arena != NULL)
+	{
+		ThreadLocalStorage* tls = PUSH_TYPE(arena, ThreadLocalStorage);
+		tls->arena = arena;
+		if (TlsSetValue(tlsIndex, (LPVOID)tls) == 0)
+		{
+			arena_destroy(arena);
+			result = false;
+		}
+	}
+
+	return result;
+}
+
+internal_func void _os_tls_destroy(u32 tlsIndex)
+{
+	ThreadLocalStorage* tls = TlsGetValue(tlsIndex);
+	if (tls != NULL)
+	{
+		arena_destroy(tls->arena);
+		TlsSetValue(tlsIndex, NULL);
+	}
+}
+
 str8_const os_get_command_line_args_str8(void)
 {
 	char* cmdLine = GetCommandLineA();

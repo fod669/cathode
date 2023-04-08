@@ -49,6 +49,9 @@ int cth_main(int argc, str8_const argv[])
 
 	arena_print(g_crt->arena);
 
+	ThreadLocalStorage* tls = os_tls();
+	arena_print(tls->arena);
+
 	ThreadHandle th = os_thread_create(other_thread, NULL);
 	u32 retVal = 0;
 	os_thread_join(&th, &retVal);

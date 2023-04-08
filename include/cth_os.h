@@ -33,6 +33,8 @@ NORETURN void		os_exit_process(int result);
 u8*					os_thread_get_TIB(void);		// Thread Information Block (aka Thread Environment Block, or TEB)
 u32					os_thread_get_ID(void);
 
+ThreadLocalStorage*	os_tls(void);
+
 typedef u32 (*ThreadProc)(void* userData);
 ThreadHandle		os_thread_create(ThreadProc proc, void* userData);
 int					os_thread_join(ThreadHandle* th, u32* returnValue);

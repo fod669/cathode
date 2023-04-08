@@ -6,7 +6,7 @@ typedef struct _CathodePrivate
 
 CathodeContext*					g_crt;
 internal_var _CathodePrivate*	g_cp;
-internal_var _OSContext*		g_os;
+_OSContext*						g_os;
 
 internal_func int _cathode_private_init(_CathodePrivate* cp)
 {
@@ -24,6 +24,8 @@ internal_func void _cathode_private_shutdown(_CathodePrivate* cp)
 
 internal_func int _os_init(_OSContext *os);
 internal_func void _os_shutdown(_OSContext *os);
+internal_func bool _os_tls_create(const char* arenaName, u32 tlsIndex);
+internal_func void _os_tls_destroy(u32 tlsIndex);
 
 internal_func int _cathode_context_init(CathodeContext* cc)
 {
@@ -67,6 +69,8 @@ NORETURN void STDCALL crt_entry(void)
 	if (result != 0) { goto os_init_fail; }
 	g_os = &osContext;
 
+	if (_os_tls_create("Main thread", g_os->tlsIndex) == false) { goto tls_init_fail; }
+
 	CathodeContext cathodeContext = {0};
 	result = _cathode_context_init(&cathodeContext);
 	if (result != 0) { goto cathode_context_init_fail; }
@@ -79,6 +83,9 @@ NORETURN void STDCALL crt_entry(void)
 	g_crt = NULL;
 	_cathode_context_shutdown(&cathodeContext);
 	cathode_context_init_fail:
+
+	_os_tls_destroy(g_os->tlsIndex);
+	tls_init_fail:
 
 	g_os = NULL;
 	_os_shutdown(&osContext);
