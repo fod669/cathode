@@ -21,27 +21,41 @@ internal_func int _os_init(_OSContext* os)
 	ASSERT(IS_POWER_OF_TWO(os->pageSize));
 	ASSERT(IS_POWER_OF_TWO(os->baseAddressAllocationGranularity));
 
-	// Thread stuff
 	os->waitObjectHandle = CreateEventA(NULL, FALSE, FALSE, NULL);
 	if (os->waitObjectHandle == NULL)
 	{
-		result = 1;
+		goto error;
 	}
 
+	os->tlsIndex = TlsAlloc();
+	if (os->tlsIndex == TLS_OUT_OF_INDEXES)
+	{
+		goto error;
+	}
+
+	goto end;
+
+error:
+	result = EXIT_CODE_OS_INIT_FAILURE;
+	_os_shutdown(os);
+
+end:
 	return result;
 }
 
 internal_func void _os_shutdown(_OSContext* os)
 {
 	ASSERT(os != NULL);
-	ASSERT(g_OS == NULL);
+	ASSERT(g_os == NULL);
+
+	if (os->tlsIndex != TLS_OUT_OF_INDEXES)
+	{
+		TlsFree(os->tlsIndex);
+	}
 
 	if (os->waitObjectHandle)
 	{
-		if (CloseHandle(os->waitObjectHandle) == 0)
-		{
-			// TODO: Error
-		}
+		CloseHandle(os->waitObjectHandle);
 	}
 }
 
@@ -65,45 +79,48 @@ typedef struct _ThreadParams
 
 internal_func DWORD WINAPI _os_thread_proc(LPVOID lpParameter)
 {
-	ASSERT(g_OS != NULL);
+	ASSERT(g_os != NULL);
+	u32 result = 1;
 
 	// Copy the _ThreadParams to prevent a race condition.
 	_ThreadParams tp = *(_ThreadParams*)lpParameter;
-	if (SetEvent(g_OS->waitObjectHandle) == 0)
+	if (SetEvent(g_os->waitObjectHandle) == 0)
 	{
-		// TODO: Error
+		os_log_last_error();
 	}
-
-	u32 result = tp.proc(tp.userData);
+	else
+	{
+		result = tp.proc(tp.userData);
+	}
 
 	return result;
 }
 
 ThreadHandle os_thread_create(ThreadProc proc, void* userData)
 {
-	ASSERT(g_OS != NULL);
+	ASSERT(g_os != NULL);
 
 	_ThreadParams tp =
 	{
-		.proc = proc,
-		.userData = userData,
+		.proc		= proc,
+		.userData	= userData,
 	};
 
 	ThreadHandle th = {0};
 	th.handle = CreateThread(NULL, 0, _os_thread_proc, (LPVOID)&tp, 0, (DWORD*)&th.threadId);
 	if (th.handle == NULL)
 	{
-		// TODO: Error
+		os_log_last_error();
 	}
 	else
 	{
-		if (WaitForSingleObject(g_OS->waitObjectHandle, INFINITE) != WAIT_OBJECT_0)
+		if (WaitForSingleObject(g_os->waitObjectHandle, INFINITE) != WAIT_OBJECT_0)
 		{
-			// TODO: Error
+			os_log_last_error();
 
 			if (CloseHandle(th.handle) == 0)
 			{
-				// TODO: Error
+				os_log_last_error();
 			}
 
 			th = (ThreadHandle){0};
@@ -116,6 +133,7 @@ ThreadHandle os_thread_create(ThreadProc proc, void* userData)
 int os_thread_join(ThreadHandle* th, u32* returnValue)
 {
 	ASSERT(th != NULL);
+	ASSERT(th->handle != NULL);
 	int result = 0;
 
 	if (WaitForSingleObject(th->handle, INFINITE) != WAIT_OBJECT_0)
@@ -128,16 +146,18 @@ int os_thread_join(ThreadHandle* th, u32* returnValue)
 		{
 			if (GetExitCodeThread(th->handle, (LPDWORD)returnValue) == 0)
 			{
-				// TODO: Error
+				result = 1;
+				os_log_last_error();
 			}
 		}
 
 		if (CloseHandle(th->handle) == 0)
 		{
-			// TODO: Error
+			result = 1;
+			os_log_last_error();
 		}
 
-		*th = (ThreadHandle){0};
+		th->handle = NULL;
 	}
 
 	return result;
@@ -256,14 +276,14 @@ void os_log_last_error(void)
 
 size_t os_mem_get_page_size(void)
 {
-	ASSERT(g_OS != NULL);
-	return g_OS->pageSize;
+	ASSERT(g_os != NULL);
+	return g_os->pageSize;
 }
 
 size_t os_mem_get_base_granularity(void)
 {
-	ASSERT(g_OS != NULL);
-	return g_OS->baseAddressAllocationGranularity;
+	ASSERT(g_os != NULL);
+	return g_os->baseAddressAllocationGranularity;
 }
 
 // Reserves a region of pages in the virtual address space of the calling process.
@@ -288,10 +308,10 @@ void* os_mem_reserve(size_t byteCount, void* baseAddress)
 	#if CTH_DEBUG
 		if (mem == NULL)
 		{
+			os_log_last_error();
 			log_error("%s: VirtualAlloc failed!\n", __func__);
 			log_error("byteCount:   %zu\n", byteCount);
 			log_error("baseAddress: %p\n", baseAddress);
-			os_log_last_error();
 		}
 	#endif
 
@@ -305,10 +325,10 @@ void* os_mem_commit(void* address, size_t byteCount)
 	#if CTH_DEBUG
 		if (mem == NULL)
 		{
+			os_log_last_error();
 			log_error("%s: VirtualAlloc failed!\n", __func__);
 			log_error("address:   %p\n", address);
 			log_error("byteCount: %zu\n", byteCount);
-			os_log_last_error();
 		}
 	#endif
 

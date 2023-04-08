@@ -3,8 +3,8 @@
 
 u32 other_thread(void* userData)
 {
-	os_thread_sleep(3000);
 	log_info("other thread!\n");
+	os_thread_sleep(3000);
 	return 123;
 }
 

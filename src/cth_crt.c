@@ -6,7 +6,7 @@ typedef struct _CathodePrivate
 
 CathodeContext*					g_crt;
 internal_var _CathodePrivate*	g_cp;
-internal_var _OSContext*		g_OS;
+internal_var _OSContext*		g_os;
 
 internal_func int _cathode_private_init(_CathodePrivate* cp)
 {
@@ -55,7 +55,7 @@ NORETURN void STDCALL crt_entry(void)
 
 	g_crt = NULL;
 	g_cp = NULL;
-	g_OS = NULL;
+	g_os = NULL;
 
 	_CathodePrivate cathodePrivate = {0};
 	result = _cathode_private_init(&cathodePrivate);
@@ -65,7 +65,7 @@ NORETURN void STDCALL crt_entry(void)
 	_OSContext osContext = {0};
 	result = _os_init(&osContext);
 	if (result != 0) { goto os_init_fail; }
-	g_OS = &osContext;
+	g_os = &osContext;
 
 	CathodeContext cathodeContext = {0};
 	result = _cathode_context_init(&cathodeContext);
@@ -80,7 +80,7 @@ NORETURN void STDCALL crt_entry(void)
 	_cathode_context_shutdown(&cathodeContext);
 	cathode_context_init_fail:
 
-	g_OS = NULL;
+	g_os = NULL;
 	_os_shutdown(&osContext);
 	os_init_fail:
 

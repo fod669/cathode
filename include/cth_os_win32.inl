@@ -20,6 +20,7 @@ typedef struct _OSContext
 	// Thread stuff
 	HANDLE		waitObjectHandle;
 
+	u32			tlsIndex;
 } _OSContext;
 
 // https://preshing.com/20120522/lightweight-in-memory-logging/

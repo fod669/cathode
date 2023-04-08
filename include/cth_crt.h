@@ -33,6 +33,7 @@ typedef double							f64;
 #define EXIT_CODE_ERROR_FATAL			100
 #define EXIT_CODE_ASSERT				101
 #define EXIT_CODE_ARENA_CREATE_FAIL		102
+#define EXIT_CODE_OS_INIT_FAILURE		103
 
 #define internal_func					static	// Has internal linkage (only visible within the current translation unit).
 #define internal_var					static	// As above, but exists in the data segment, and is initialised to zero. Take care with these if hot loading DLLs.
