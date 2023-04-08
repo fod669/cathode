@@ -1,6 +1,13 @@
 
 #include "cathode.h"
 
+u32 other_thread(void* userData)
+{
+	os_thread_sleep(3000);
+	log_info("other thread!\n");
+	return 123;
+}
+
 int cth_main(int argc, str8_const argv[])
 {
 	log_info("\nArgs:\n");
@@ -41,6 +48,11 @@ int cth_main(int argc, str8_const argv[])
 	log_info("ptrdiff_t = %td\n", tmp_ptrdiff_t);
 
 	arena_print(g_crt->arena);
+
+	ThreadHandle th = os_thread_create(other_thread, NULL);
+	u32 retVal = 0;
+	os_thread_join(&th, &retVal);
+	log_warning("thread returned %u\n", retVal);
 
 	return EXIT_SUCCESS;
 }

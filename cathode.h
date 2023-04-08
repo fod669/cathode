@@ -103,6 +103,7 @@ Features:
 - Code hot reloading.
 - DLL loading.
 - Threading & thread contexts.
+	- TLS info: http://www.nynaeve.net/?p=180
 	- Do this next because we'll need to think carefully about how threads handle their own memory, and also
 	  we need threads to add thread safety to memory allocation.
 	- Look up TlsAlloc().

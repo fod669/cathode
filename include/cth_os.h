@@ -30,8 +30,13 @@ typedef enum eConsoleTextColour
 str8_const			os_get_command_line_args_str8(void);
 NORETURN void		os_exit_process(int result);
 
-u8*					os_thread_get_TIB(void);		// Thread Information Block
+u8*					os_thread_get_TIB(void);		// Thread Information Block (aka Thread Environment Block, or TEB)
 u32					os_thread_get_ID(void);
+
+typedef u32 (*ThreadProc)(void* userData);
+ThreadHandle		os_thread_create(ThreadProc proc, void* userData);
+int					os_thread_join(ThreadHandle* th, u32* returnValue);
+void				os_thread_sleep(u32 milliSeconds);
 
 void				os_critsec_init(CriticalSection* cs);
 void				os_critsec_delete(CriticalSection* cs);

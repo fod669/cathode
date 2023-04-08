@@ -5,12 +5,14 @@
 
 typedef struct Arena					Arena;
 typedef struct CriticalSection			CriticalSection;
+typedef struct ThreadHandle				ThreadHandle;
 
 typedef struct CathodeContext
 {
 	Arena*								arena;
 } CathodeContext;
 
+// TODO: Make each thread have its own one of these (thread_local)
 extern CathodeContext*					g_crt;
 
 typedef int8_t							s8;

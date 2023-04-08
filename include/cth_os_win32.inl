@@ -4,14 +4,26 @@ typedef struct CriticalSection
 	CRITICAL_SECTION data;
 } CriticalSection;
 
+typedef struct ThreadHandle
+{
+	HANDLE		handle;
+	u32			threadId;
+} ThreadHandle;
+
 typedef struct _OSContext
 {
 	size_t		pageSize;
 	void*		lowestAccessibleAddress;
 	void*		highestAccessibleAddress;
 	size_t		baseAddressAllocationGranularity;
+
+	// Thread stuff
+	HANDLE		waitObjectHandle;
+
 } _OSContext;
 
+// https://preshing.com/20120522/lightweight-in-memory-logging/
+// https://en.wikipedia.org/wiki/Win32_Thread_Information_Block
 inline u8* os_thread_get_TIB(void)
 {
 	#if CTH_ARCH_32_BIT

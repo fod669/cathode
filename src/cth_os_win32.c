@@ -3,12 +3,13 @@ internal_func int _os_init(_OSContext* os)
 {
 	ASSERT(os != NULL);
 
+	int result = 0;
 	SYSTEM_INFO sysInfo;
 	GetSystemInfo(&sysInfo);
 
 	//WORD 		sysInfo.wProcessorArchitecture;
 	os->pageSize							= (size_t)sysInfo.dwPageSize;
-	os->lowestAccessibleAddress			= sysInfo.lpMinimumApplicationAddress;
+	os->lowestAccessibleAddress				= sysInfo.lpMinimumApplicationAddress;
 	os->highestAccessibleAddress			= sysInfo.lpMaximumApplicationAddress;
 	//DWORD_PTR	sysInfo.dwActiveProcessorMask;
 	//DWORD		sysInfo.dwNumberOfProcessors;
@@ -20,13 +21,28 @@ internal_func int _os_init(_OSContext* os)
 	ASSERT(IS_POWER_OF_TWO(os->pageSize));
 	ASSERT(IS_POWER_OF_TWO(os->baseAddressAllocationGranularity));
 
-	return 0;
+	// Thread stuff
+	os->waitObjectHandle = CreateEventA(NULL, FALSE, FALSE, NULL);
+	if (os->waitObjectHandle == NULL)
+	{
+		result = 1;
+	}
+
+	return result;
 }
 
 internal_func void _os_shutdown(_OSContext* os)
 {
 	ASSERT(os != NULL);
 	ASSERT(g_OS == NULL);
+
+	if (os->waitObjectHandle)
+	{
+		if (CloseHandle(os->waitObjectHandle) == 0)
+		{
+			// TODO: Error
+		}
+	}
 }
 
 str8_const os_get_command_line_args_str8(void)
@@ -39,6 +55,97 @@ str8_const os_get_command_line_args_str8(void)
 NORETURN void os_exit_process(int result)
 {
 	ExitProcess(result);
+}
+
+typedef struct _ThreadParams
+{
+	ThreadProc		proc;
+	void*			userData;
+} _ThreadParams;
+
+internal_func DWORD WINAPI _os_thread_proc(LPVOID lpParameter)
+{
+	ASSERT(g_OS != NULL);
+
+	// Copy the _ThreadParams to prevent a race condition.
+	_ThreadParams tp = *(_ThreadParams*)lpParameter;
+	if (SetEvent(g_OS->waitObjectHandle) == 0)
+	{
+		// TODO: Error
+	}
+
+	u32 result = tp.proc(tp.userData);
+
+	return result;
+}
+
+ThreadHandle os_thread_create(ThreadProc proc, void* userData)
+{
+	ASSERT(g_OS != NULL);
+
+	_ThreadParams tp =
+	{
+		.proc = proc,
+		.userData = userData,
+	};
+
+	ThreadHandle th = {0};
+	th.handle = CreateThread(NULL, 0, _os_thread_proc, (LPVOID)&tp, 0, (DWORD*)&th.threadId);
+	if (th.handle == NULL)
+	{
+		// TODO: Error
+	}
+	else
+	{
+		if (WaitForSingleObject(g_OS->waitObjectHandle, INFINITE) != WAIT_OBJECT_0)
+		{
+			// TODO: Error
+
+			if (CloseHandle(th.handle) == 0)
+			{
+				// TODO: Error
+			}
+
+			th = (ThreadHandle){0};
+		}
+	}
+
+	return th;
+}
+
+int os_thread_join(ThreadHandle* th, u32* returnValue)
+{
+	ASSERT(th != NULL);
+	int result = 0;
+
+	if (WaitForSingleObject(th->handle, INFINITE) != WAIT_OBJECT_0)
+	{
+		result = 1;
+	}
+	else
+	{
+		if (returnValue != NULL)
+		{
+			if (GetExitCodeThread(th->handle, (LPDWORD)returnValue) == 0)
+			{
+				// TODO: Error
+			}
+		}
+
+		if (CloseHandle(th->handle) == 0)
+		{
+			// TODO: Error
+		}
+
+		*th = (ThreadHandle){0};
+	}
+
+	return result;
+}
+
+void os_thread_sleep(u32 milliSeconds)
+{
+	Sleep(milliSeconds);
 }
 
 void os_console_write(const char* buf, int length, eConsoleTextColour colour)
